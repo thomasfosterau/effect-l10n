@@ -1,0 +1,24 @@
+{
+  "name": "@effect-l10n/core",
+  "version": "0.0.0",
+  "description": "Effect library for i18n, g11n and l10n",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack --watch",
+    "test": "vp test run"
+  }
+}
