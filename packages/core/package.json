@@ -17,8 +17,6 @@
     "access": "public"
   },
   "scripts": {
-    "build": "vp pack",
-    "dev": "vp pack --watch",
-    "test": "vp test run"
+    "dev": "vp pack --watch"
   }
 }
