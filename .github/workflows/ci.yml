@@ -1,21 +1,58 @@
 name: CI
+
+# Shaped like the sibling Effect libraries' CI (effect-web, effect-ext): the
+# gates run in one job per Node version, in the order AGENTS.md#verification
+# lists them. Nothing here needs a credential, so every PR class, Dependabot's
+# included, runs the whole gate safely.
+
 on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize, ready_for_review]
   push:
     branches: [main]
-  pull_request:
-permissions:
-  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+# No permissions by default; each job grants only read access.
+permissions: {}
+
 jobs:
   ci:
+    name: ci (node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        # The `engines.node` floor's major and the current LTS (pinned majors,
+        # never `latest`; see the setup action).
+        node-version: ["22", "24"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          node-version: 24
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm check
-      - run: pnpm build
-      - run: pnpm test
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Restore the Vite+ task cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: node_modules/.vite/task-cache
+          key: vp-task-v1-${{ runner.os }}-node${{ matrix.node-version }}-${{ github.sha }}
+          restore-keys: |
+            vp-task-v1-${{ runner.os }}-node${{ matrix.node-version }}-
+      - name: Format and lint (type-aware)
+        run: pnpm exec vp check
+      - name: Type gate
+        run: pnpm exec vp run check
+      - name: Unit tests
+        run: pnpm exec vp run -r test:unit
+      - name: Build
+        run: pnpm exec vp run -r build
+      - name: Audit
+        run: pnpm audit --audit-level high

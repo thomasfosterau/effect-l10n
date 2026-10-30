@@ -1,0 +1,108 @@
+# Dependabot version updates.
+#
+# The `npm` ecosystem at `/` reads the pnpm workspace, its catalog and
+# pnpm-lock.yaml, so a bump lands in pnpm-workspace.yaml's catalog (the only
+# place a version lives) together with the regenerated lockfile.
+#
+# Groups exist so that dependencies which MUST move together arrive in ONE PR
+# (a PR moving one of them alone goes red). Dependabot puts a dependency in
+# the FIRST group whose patterns match, so the groups run specific -> general
+# and `exclude-patterns` keeps each package out of the wrong one. Every
+# lockstep group matches every update type, majors included; the catch-all
+# takes only minor and patch updates, so a major outside a lockstep set stays
+# an individual PR.
+#
+# - `toolchain`: `vite` (the vite-plus core alias), `vitest` and `@vitest/*`
+#   must equal what that vite-plus release pins (it also pins oxlint, oxfmt
+#   and oxlint-tsgolint), and the Effect lint preset (`@enfect/oxlint`) rides
+#   with the oxlint it loads into. `@effect/tsgo` and `@typescript/native` are
+#   listed so the family's groups stay identical (this repo does not use them
+#   yet).
+# - `effect`: the Effect 4 line is lockstep-versioned (none installed yet).
+# - `changesets`, `fallow`: each moves on its own line.
+#
+# By hand, because Dependabot cannot bump them: the `vite` catalog entry is an
+# npm alias (`npm:@voidzero-dev/vite-plus-core@<v>`) that must equal
+# `vite-plus`, so set it in the toolchain PR that moves `vite-plus` (or run
+# `pnpm exec vp migrate`, which re-pins it and `vitest`, then drop any
+# `minimumReleaseAgeExclude` entries it adds); and the `vite@*` / `vitest@*`
+# keys under pnpm-workspace.yaml's `overrides` point at `catalog:`, so they
+# follow their catalog entries.
+#
+# `cooldown`: pnpm-workspace.yaml's `minimumReleaseAge` is 480 minutes (8
+# hours), and Dependabot's cooldown takes whole days only, so it is 1 day:
+# longer than pnpm's hold, so a Dependabot PR never proposes a version pnpm
+# would still refuse. It mirrors `minimumReleaseAgeExclude` (`@thomasfosterau/*`,
+# first-party). zizmor's dependabot-cooldown audit wants 7 days; the owner's
+# policy is 1, so that finding is ignored inline.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "chore"
+    cooldown:
+      default-days: 1 # zizmor: ignore[dependabot-cooldown] -- owner policy (see header)
+      exclude:
+        - "@thomasfosterau/*"
+    groups:
+      toolchain:
+        applies-to: version-updates
+        patterns:
+          - "vite-plus"
+          - "vite"
+          - "vitest"
+          - "@vitest/*"
+          - "oxlint"
+          - "oxfmt"
+          - "oxlint-tsgolint"
+          - "@effect/tsgo"
+          - "@typescript/native"
+          - "typescript"
+          - "@enfect/oxlint"
+        update-types: ["major", "minor", "patch"]
+      effect:
+        applies-to: version-updates
+        patterns:
+          - "effect"
+          - "@effect/*"
+        exclude-patterns:
+          - "@effect/tsgo"
+        update-types: ["major", "minor", "patch"]
+      changesets:
+        applies-to: version-updates
+        patterns:
+          - "@changesets/*"
+        update-types: ["major", "minor", "patch"]
+      fallow:
+        applies-to: version-updates
+        patterns:
+          - "fallow"
+        update-types: ["major", "minor", "patch"]
+      minor-and-patch:
+        applies-to: version-updates
+        patterns:
+          - "*"
+        update-types: ["minor", "patch"]
+  - package-ecosystem: "github-actions"
+    # The workflows, plus the local composite action they call.
+    directories:
+      - "/"
+      - "/.github/actions/setup"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore"
+    cooldown:
+      default-days: 1 # zizmor: ignore[dependabot-cooldown] -- owner policy (see header)
+    groups:
+      github-actions:
+        applies-to: version-updates
+        patterns:
+          - "*"

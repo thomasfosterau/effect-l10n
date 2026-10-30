@@ -1,2 +1,64 @@
+# pnpm workspace for the `effect-l10n` packages (`packages/*`).
+#
+# EVERY external dependency version lives here: package.json files reference
+# only `catalog:` (or `workspace:` for a sibling). `catalogMode: strict` makes
+# `pnpm add` write `catalog:` and reject a version outside the catalog. After
+# editing this catalog, ALWAYS run `pnpm install` and commit the regenerated
+# pnpm-lock.yaml: a stale lockfile fails CI at once with
+# ERR_PNPM_LOCKFILE_CONFIG_MISMATCH.
+#
+# The toolchain (vite-plus, the Effect lint preset, fallow) is kept in step
+# with the sibling Effect libraries (effect-ext, effect-web). Dependabot's
+# groups in .github/dependabot.yml mirror the lockstep sets named below.
 packages:
   - packages/*
+
+catalogMode: strict
+
+catalog:
+  "@changesets/cli": ^3.0.3
+  # The Effect lint preset (`effect/*` rules, anti-slop included), loaded by
+  # the oxlint vite-plus carries: it moves with `vite-plus` (toolchain group).
+  "@enfect/oxlint": ^0.9.0
+  # Must equal the vitest that vite-plus bundles (see `vitest` below); vite-plus
+  # refuses to run coverage on a mismatch (toolchain group).
+  "@vitest/coverage-istanbul": 5.0.5
+  fallow: 3.37.0
+  typescript: ^5.9.3
+  # vite-plus pins `oxlint`, `oxfmt`, `oxlint-tsgolint` and `vitest` to exact
+  # versions: 1.4.0 carries oxlint 1.89.0, oxfmt 0.74.0, oxlint-tsgolint
+  # 7.0.2004 and vitest 5.0.5. `vite` is the same release under its aliased
+  # core package (an npm alias Dependabot cannot bump: set it by hand, or run
+  # `pnpm exec vp migrate`, in the toolchain PR). `vitest` must match
+  # vite-plus's exact pin because the `vitest@*: "catalog:"` override forces
+  # every resolution to this singleton.
+  vite-plus: 1.4.0
+  vite: npm:@voidzero-dev/vite-plus-core@1.4.0
+  vitest: 5.0.5
+
+overrides:
+  # Vite+'s managed pins (`vp migrate`): the `@*` range rewrites the semver
+  # specs transitive and peer declarations use, leaving `catalog:` intact.
+  vite@*: "catalog:"
+  vitest@*: "catalog:"
+
+allowBuilds:
+  esbuild: true
+  fallow: true
+
+peerDependencyRules:
+  allowAny:
+    - vite
+    - vitest
+  allowedVersions:
+    vite: "*"
+    vitest: "*"
+
+# Supply-chain delay (the owner's policy across the family): hold newly
+# published versions for 480 MINUTES (8 hours) before pnpm will install them.
+# Dependabot's `cooldown` (whole days only) is 1 day, longer than this, so it
+# never proposes a version pnpm would still refuse.
+minimumReleaseAge: 480
+minimumReleaseAgeExclude:
+  # @thomasfosterau/* is first-party: exempt so our own releases install immediately.
+  - "@thomasfosterau/*"

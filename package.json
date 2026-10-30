@@ -3,20 +3,22 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vp run -r dev",
-    "build": "vp run -r build",
-    "test": "vp run -r test",
-    "check": "vp check",
-    "lint": "vp lint",
-    "fmt": "vp fmt",
     "changeset": "changeset",
-    "version-packages": "changeset version",
-    "release": "pnpm build && changeset publish"
+    "version-packages": "changeset version && vp fmt && pnpm install --lockfile-only",
+    "release": "vp run -r build && changeset publish",
+    "fallow": "fallow --summary",
+    "fallow:audit": "fallow audit",
+    "prepare": "vp config"
   },
   "devDependencies": {
-    "@changesets/cli": "^3.0.3",
-    "typescript": "^5.9.3",
-    "vite-plus": "^1.4.0"
+    "@changesets/cli": "catalog:",
+    "@enfect/oxlint": "catalog:",
+    "@vitest/coverage-istanbul": "catalog:",
+    "fallow": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
   },
   "engines": {
     "node": ">=22.18.0"
