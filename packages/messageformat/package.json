@@ -1,0 +1,31 @@
+{
+  "name": "@effect-l10n/messageformat",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Unicode MessageFormat 2 for Effect: data model, parser, validation, type inference and a reference formatter",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "vp pack --watch"
+  },
+  "devDependencies": {
+    "@effect/language-service": "catalog:",
+    "effect": "catalog:"
+  },
+  "peerDependencies": {
+    "effect": "catalog:peers"
+  }
+}

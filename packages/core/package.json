@@ -2,16 +2,17 @@
   "name": "@effect-l10n/core",
   "version": "0.0.0",
   "private": true,
-  "description": "Effect library for i18n, g11n and l10n",
+  "description": "Locales, Message.make, catalogs, translations and defineConfig for effect-l10n",
   "license": "MIT",
   "files": [
     "dist"
   ],
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.mts",
-      "default": "./dist/index.mjs"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "publishConfig": {

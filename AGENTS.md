@@ -2,11 +2,22 @@
 
 `CLAUDE.md` is a symlink to this file. This repo publishes the `effect-l10n` packages: an experimental Effect library and CLI for internationalisation (i18n), globalisation (g11n) and localisation (l10n). It is a pnpm workspace on [Vite+](https://viteplus.dev) (`vp`), linted with Oxlint and the `@enfect/oxlint` Effect preset and audited with [fallow](https://fallow.tools). The default branch is `main`.
 
-| Package             | Directory       | Entries |
-| ------------------- | --------------- | ------- |
-| `@effect-l10n/core` | `packages/core` | `.`     |
+## Packages
 
-A new package adds a row here, its own `vite.config.ts` with `check` / `build` / `test:unit` tasks, a `#check` edge on the root `check` task (`vite.config.ts`), and its entry points in `.fallowrc.json`.
+The layout and the dependency direction are [ADR 0006](docs/adr/0006-package-layout.md); every design decision is an [ADR](docs/adr/README.md). Packages are created as their milestone starts.
+
+| Package                      | Directory                | Entries | Milestone |
+| ---------------------------- | ------------------------ | ------- | --------- |
+| `@effect-l10n/messageformat` | `packages/messageformat` | `.`     | M1 (#4)   |
+| `@effect-l10n/core`          | `packages/core`          | `.`     | M2 (#5)   |
+| `@effect-l10n/compiler`      | `packages/compiler`      | `.`     | M3 (#6)   |
+
+Dependencies point one way, `messageformat` ← `core` ← `compiler` ← targets / `interchange` ← `cli` / bundler plugins, enforced by the boundary zones in `.fallowrc.json`. A new package copies `packages/compiler`:
+
+- `package.json`: `"private": true` (until its first public API), `"type": "module"`, `"sideEffects": false`, `exports` pointing at `dist/index.js` / `dist/index.d.ts`, the shared metadata (`repository.directory`, `homepage`, `bugs`, `keywords`, `engines`), `effect: "catalog:peers"` as a peer and `effect: "catalog:"` as a dev dependency. A workspace sibling it imports is a `workspace:^` dependency.
+- `vite.config.ts`: `export default packageConfig()` from the root `vite.package.ts`, which defines its `check`, `build` and `test:unit` tasks (each with a build edge on its workspace dependencies) and its `vp pack` and Vitest settings.
+- `tsconfig.json` extending `../../tsconfig.base.json` over `src` and `vite.config.ts`; `src/index.ts` as the entry, tests beside the code as `src/**/*.test.ts`; a `README.md`.
+- Its row in the table above and in ADR 0006, its `#check` edge on the root `check` task (`vite.config.ts`), and its zone and rule in `.fallowrc.json`'s `boundaries`.
 
 ## Common pitfalls
 

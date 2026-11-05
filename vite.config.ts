@@ -12,14 +12,20 @@ const cacheInputs = [{ auto: true }, "!node_modules/**", "!coverage/**", "pnpm-l
 export default defineConfig({
   // The gates are Vite Task tasks rather than package.json scripts, so they are
   // cached and `vp run check` never collides with the built-in `vp check`.
-  // Each package declares its own `check`, `build` and `test:unit`
-  // (packages/*/vite.config.ts); the root `check` runs them first.
+  // Each package's `check`, `build` and `test:unit` come from the shared
+  // vite.package.ts (instantiated by packages/*/vite.config.ts); the root
+  // `check` runs them first.
   run: {
     tasks: {
       // The type gate: every package's `tsc`, then the root configs.
       check: {
         command: "tsc --noEmit -p tsconfig.json",
-        dependsOn: ["@effect-l10n/core#check"],
+        // Every package's type gate; a new package adds its own edge here.
+        dependsOn: [
+          "@effect-l10n/messageformat#check",
+          "@effect-l10n/core#check",
+          "@effect-l10n/compiler#check",
+        ],
         cache: { input: cacheInputs, output: [] },
       },
       // Uncached: it exists to write `coverage/coverage-final.json`, which the
