@@ -38,7 +38,7 @@ catalog:
   # failing `pnpm install` itself: read the `components` table in
   # node_modules/@effect/tsgo/dist/effect-tsgo.cjs before bumping any of the
   # three (toolchain group).
-  "@effect/tsgo": 0.63.0
+  "@effect/tsgo": 0.64.1
   # The Node `FileSystem` / `Path` layers the golden-file helper
   # (`@effect-l10n/testing`) runs on. The shared package rather than
   # @effect/platform-node, whose required `redis` peer pnpm would install.
@@ -48,10 +48,10 @@ catalog:
   "@effect/vitest": 4.1.2
   # The Effect lint preset (`effect/*` rules, anti-slop included), loaded by
   # the oxlint vite-plus carries: it moves with `vite-plus` (toolchain group).
-  "@enfect/oxlint": ^0.9.0
+  "@enfect/oxlint": ^0.10.0
   # Must equal the vitest that vite-plus bundles (see `vitest` below); vite-plus
   # refuses to run coverage on a mismatch (toolchain group).
-  "@vitest/coverage-istanbul": 5.0.5
+  "@vitest/coverage-istanbul": 5.1.0
   # Exact: the singleton every package builds and tests against (see the
   # `effect` override). The range published packages declare is under
   # `catalogs.peers`.
@@ -78,7 +78,7 @@ catalog:
   # every resolution to this singleton.
   vite-plus: 1.4.0
   vite: npm:@voidzero-dev/vite-plus-core@1.4.0
-  vitest: 5.0.5
+  vitest: 5.1.0
 
 # Peer ranges the PUBLISHED packages declare, kept as a named catalog so the
 # strict catalog mode still governs them while they stay ranges. `pnpm
