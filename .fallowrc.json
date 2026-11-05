@@ -35,20 +35,28 @@
       {
         "name": "compiler",
         "patterns": ["packages/compiler/**"]
+      },
+      {
+        "name": "testing",
+        "patterns": ["packages/testing/**"]
       }
     ],
     "rules": [
       {
-        "from": "messageformat",
+        "from": "testing",
         "allow": []
       },
       {
+        "from": "messageformat",
+        "allow": ["testing"]
+      },
+      {
         "from": "core",
-        "allow": ["messageformat"]
+        "allow": ["messageformat", "testing"]
       },
       {
         "from": "compiler",
-        "allow": ["messageformat", "core"]
+        "allow": ["messageformat", "core", "testing"]
       }
     ]
   },

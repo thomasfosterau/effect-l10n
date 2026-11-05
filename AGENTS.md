@@ -6,13 +6,14 @@
 
 The layout and the dependency direction are [ADR 0006](docs/adr/0006-package-layout.md); every design decision is an [ADR](docs/adr/README.md). Packages are created as their milestone starts.
 
-| Package                      | Directory                | Entries | Milestone |
-| ---------------------------- | ------------------------ | ------- | --------- |
-| `@effect-l10n/messageformat` | `packages/messageformat` | `.`     | M1 (#4)   |
-| `@effect-l10n/core`          | `packages/core`          | `.`     | M2 (#5)   |
-| `@effect-l10n/compiler`      | `packages/compiler`      | `.`     | M3 (#6)   |
+| Package                      | Directory                | Entries | Milestone                          |
+| ---------------------------- | ------------------------ | ------- | ---------------------------------- |
+| `@effect-l10n/messageformat` | `packages/messageformat` | `.`     | M1 (#4)                            |
+| `@effect-l10n/core`          | `packages/core`          | `.`     | M2 (#5)                            |
+| `@effect-l10n/compiler`      | `packages/compiler`      | `.`     | M3 (#6)                            |
+| `@effect-l10n/testing`       | `packages/testing`       | `.`     | M0 (#18), private, never published |
 
-Dependencies point one way, `messageformat` ← `core` ← `compiler` ← targets / `interchange` ← `cli` / bundler plugins, enforced by the boundary zones in `.fallowrc.json`. A new package copies `packages/compiler`:
+Dependencies point one way, `messageformat` ← `core` ← `compiler` ← targets / `interchange` ← `cli` / bundler plugins, enforced by the boundary zones in `.fallowrc.json`; any package's tests may use `@effect-l10n/testing` (golden-file trees; the test strategy is in [CONTRIBUTING.md](CONTRIBUTING.md#testing)). A new package copies `packages/compiler`:
 
 - `package.json`: `"private": true` (until its first public API), `"type": "module"`, `"sideEffects": false`, `exports` pointing at `dist/index.js` / `dist/index.d.ts`, the shared metadata (`repository.directory`, `homepage`, `bugs`, `keywords`, `engines`), `effect: "catalog:peers"` as a peer and `effect: "catalog:"` as a dev dependency. A workspace sibling it imports is a `workspace:^` dependency.
 - `vite.config.ts`: `export default packageConfig()` from the root `vite.package.ts`, which defines its `check`, `build` and `test:unit` tasks (each with a build edge on its workspace dependencies) and its `vp pack` and Vitest settings.

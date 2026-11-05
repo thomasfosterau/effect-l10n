@@ -39,6 +39,11 @@ catalog:
   # node_modules/@effect/tsgo/dist/effect-tsgo.cjs before bumping any of the
   # three (toolchain group).
   "@effect/tsgo": 0.63.0
+  # The Node `FileSystem` / `Path` layers the golden-file helper
+  # (`@effect-l10n/testing`) runs on. The shared package rather than
+  # @effect/platform-node, whose required `redis` peer pnpm would install.
+  # Lockstep with `effect`.
+  "@effect/platform-node-shared": 4.1.2
   # Lockstep with `effect` (the Effect 4 line is released as one version).
   "@effect/vitest": 4.1.2
   # The Effect lint preset (`effect/*` rules, anti-slop included), loaded by

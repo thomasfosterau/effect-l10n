@@ -52,6 +52,17 @@ fallow audit --base origin/main            # the change-set review (not a CI gat
 - **Versions live in the catalog** (`pnpm-workspace.yaml`), never in a `package.json`; commit the regenerated `pnpm-lock.yaml` with any catalog change.
 - A new package follows the template in [AGENTS.md](AGENTS.md#packages); a new design decision gets an [ADR](docs/adr/README.md).
 
+## Testing
+
+Tests sit beside the code as `src/**/*.test.ts` and import from `vite-plus/test`, or from `@effect/vitest` for Effect code (`it.effect`, `it.layer`, `it.prop`, `assert`). The conventions below apply as the milestones that need them land.
+
+- **Unit tests** cover each module's behaviour, including its typed failures: assert on the tagged error, not on a message.
+- **Property tests** use `@effect/vitest`'s `it.prop`, which draws inputs from `Schema`s (or Effect `Arbitrary`s) and shrinks a failing case. Every parser and serialiser gets a round-trip property (`parse(serialise(x))` equals `x`); [`packages/testing/src/golden.test.ts`](packages/testing/src/golden.test.ts) shows the shape.
+- **Golden-file tests** compare everything a target emits for a fixture project with a committed tree. Call `expectGoldenTree(tree, directory)` from `@effect-l10n/testing` (a private workspace package: add `"@effect-l10n/testing": "workspace:*"` to the package's `devDependencies`) inside an `it.effect` that provides its `layer`. Snapshots live under the test's `__golden__/<case>/` directory, which the formatter leaves alone so the bytes stay the target's. `vp test run -u` rewrites them after an intended change; review the diff like code. A committed file the target stops emitting fails the test until you delete it. The stub-target test in `packages/testing` is the worked example; real targets reuse it from M3 (#32) on.
+- **MF2 conformance** (M1): the unicode-org/message-format-wg `test/` JSON suites are vendored into `packages/messageformat`, pinned to one spec release with its version and source commit recorded beside them, and run as data-driven tests by the parser, validator and formatter. Updating them is its own PR.
+- **Example projects** (`examples/web`, `examples/ios`, `examples/android`) join the workspace as private packages with the targets that need them (M4–M6), and double as the golden fixtures and the documentation's samples.
+- **Native CI jobs** are reserved for M5 / M6: a macOS job that builds the generated Swift and an Android job that runs Gradle against the generated Kotlin, each triggered only when its target package or examples change (a `paths` filter).
+
 ## CI
 
 [ci.yml](.github/workflows/ci.yml) runs the gates on Node 22 and 24, plus the advisory `changeset status` job on PRs. [release.yml](.github/workflows/release.yml) runs Changesets on `main` ([PUBLISHING.md](PUBLISHING.md)).

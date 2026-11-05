@@ -25,6 +25,7 @@ export default defineConfig({
           "@effect-l10n/messageformat#check",
           "@effect-l10n/core#check",
           "@effect-l10n/compiler#check",
+          "@effect-l10n/testing#check",
         ],
         cache: { input: cacheInputs, output: [] },
       },
@@ -84,6 +85,9 @@ export default defineConfig({
       // suggestion (tsconfig.base.json's `diagnosticSeverity`), so the lint
       // copy would only repeat it as a warning on every test.
       "effecttsgo/unstable-api-usage": "off",
+      // Vitest's `expect(value, message)` takes a failure message as its
+      // second argument; the rule's default of one argument is Jest's.
+      "vitest/valid-expect": ["error", { maxArgs: 2 }],
     },
     overrides: [
       // A package scaffolded ahead of its milestone (AGENTS.md#packages) has
@@ -93,6 +97,12 @@ export default defineConfig({
       {
         files: ["packages/*/src/index.ts"],
         rules: { "unicorn/no-empty-file": "off" },
+      },
+      // The shared assertion helpers (`expectGoldenTree`) wrap `expect` and
+      // are only ever called from inside a test block in another package.
+      {
+        files: ["packages/testing/src/**/*.ts"],
+        rules: { "vitest/no-standalone-expect": "off" },
       },
     ],
     ignorePatterns: ["**/dist/**", "coverage/**"],
@@ -107,7 +117,14 @@ export default defineConfig({
     },
   },
   fmt: {
-    ignorePatterns: ["**/dist/**", "coverage/**", "CHANGELOG.md", ".changeset/*.md"],
+    // `__golden__/` holds committed target output, compared byte for byte.
+    ignorePatterns: [
+      "**/dist/**",
+      "coverage/**",
+      "**/__golden__/**",
+      "CHANGELOG.md",
+      ".changeset/*.md",
+    ],
     sortPackageJson: true,
   },
 });
