@@ -1,6 +1,6 @@
 # AGENTS.md
 
-`CLAUDE.md` is a symlink to this file. This repo publishes the `effect-l10n` packages: an experimental Effect library and CLI for internationalisation (i18n), globalisation (g11n) and localisation (l10n). It is a pnpm workspace on [Vite+](https://viteplus.dev) (`vp`), linted with Oxlint and the `@enfect/oxlint` Effect preset and audited with [fallow](https://fallow.tools). The default branch is `main`.
+`CLAUDE.md` is a symlink to this file. This repo publishes the `effect-l10n` packages: an experimental Effect library and CLI for internationalisation (i18n), globalisation (g11n) and localisation (l10n). It is a pnpm workspace on [Vite+](https://viteplus.dev) (`vp`), linted with Oxlint and the `@enfect/oxlint` Effect preset and audited with [fallow](https://fallow.tools). The default branch is `main`. Human setup (pnpm 12 without Corepack, the editor's language service) is in [CONTRIBUTING.md](CONTRIBUTING.md), the release pipeline in [PUBLISHING.md](PUBLISHING.md), and the design decisions in [docs/adr/](docs/adr/README.md).
 
 ## Packages
 
@@ -68,7 +68,14 @@ Steps 2–7 are CI's `ci` job, in its order, on Node 22 and 24 ([ci.yml](.github
 
 ## Effect
 
-Never guess at an Effect API: read the installed package (`node_modules/effect/dist/*.d.ts`, `node_modules/effect/src`, and `node_modules/effect/AGENTS.md` / `ai-docs/`). Tagged errors are `Schema.TaggedError<Self>()(tag, fields)` classes.
+Never guess at an Effect API: read the installed package (`node_modules/effect/AGENTS.md` and `node_modules/effect/ai-docs/` first, then `node_modules/effect/dist/*.d.ts` and `node_modules/effect/src`). The pinned version is the `effect` entry in `pnpm-workspace.yaml`'s catalog; the published peer floor is under `catalogs.peers`.
+
+- **Imports** are namespace imports of the owning module (`import * as Effect from "effect/Effect"`), never named imports from the `effect` barrel (`effect/no-barrel-imports`); `effect/Record` is `R` and `effect/String` is `Str` (`effect/prefer-namespace-imports`).
+- **Functions returning an `Effect`** are `Effect.fn("name")(function* (...) { ... })` (traced) or `Effect.fnUntraced` on hot paths, not a function wrapping `Effect.gen`. Give `Effect.forEach` and friends an explicit `concurrency`.
+- **Errors** are `Schema.TaggedError<Self>()(tag, fields)` classes, failed with `return yield* new MyError({ ... })`; never `throw`, never extend `Error`. A parser or validator reports source spans in its error fields (M1, [ADR 0002](docs/adr/0002-messageformat-2.md)).
+- **Data** crossing a boundary (configs, translation files, interchange formats) is decoded with an Effect `Schema`, never `JSON.parse` plus a cast. A `Schema` is the single source of a model's type (`typeof X.Type`).
+- **Services** are `Context.Service` classes with a `layer` (and a `layerTest` where a fake is useful); I/O goes through Effect's `FileSystem` / `Path` services, provided at the edge (the CLI, a test's `it.layer`), so library code stays platform-neutral.
+- **Build time only** ([ADR 0003](docs/adr/0003-effect-at-build-time-only.md)): nothing a target emits for the web imports `effect`.
 
 ## Agent sessions
 
