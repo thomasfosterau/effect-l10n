@@ -12,6 +12,7 @@ A new package adds a row here, its own `vite.config.ts` with `check` / `build` /
 
 - **Never edit a version in a `package.json`.** Versions live in the `pnpm-workspace.yaml` catalog (`catalogMode: strict`). After editing it, run `pnpm install` and commit `pnpm-lock.yaml`, or CI fails with `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`. `vite-plus`, `vite`, `vitest`, `@vitest/*` and `@enfect/oxlint` move together; Dependabot's `toolchain` group bumps them as one PR, except the `vite` npm alias (`npm:@voidzero-dev/vite-plus-core@<v>`, equal to `vite-plus`), which Dependabot cannot bump: set it by hand in that PR, or run `pnpm exec vp migrate` (then drop any `minimumReleaseAgeExclude` entries it adds). `.github/dependabot.yml`'s header lists the hand moves. `minimumReleaseAge` holds new versions for 8 hours (480 minutes); Dependabot's cooldown is 1 day.
 - **`dist/` is the product.** Each package is a `vp pack` (tsdown) library; `exports` points at `dist/`.
+- **Every package is `"private": true` until it ships a public API.** `changeset publish` skips private packages, so the Release job publishes nothing while the workspace is scaffolding (an empty `0.0.0` publish only 404s: npm has no trusted publisher for an unpublished name). The PR that gives a package its first real API removes `private` and adds the changeset that releases it as `0.1.0`.
 - **`effect` will be a peer, never a dependency,** once a package imports it: two copies break `Context` / `Layer` / `Schema` identity.
 
 ## Conventions

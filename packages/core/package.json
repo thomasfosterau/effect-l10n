@@ -1,6 +1,7 @@
 {
   "name": "@effect-l10n/core",
   "version": "0.0.0",
+  "private": true,
   "description": "Effect library for i18n, g11n and l10n",
   "license": "MIT",
   "files": [
