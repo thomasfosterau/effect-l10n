@@ -8,12 +8,16 @@
     "release": "vp run -r build && changeset publish",
     "fallow": "fallow --summary",
     "fallow:audit": "fallow audit",
-    "prepare": "vp config"
+    "prepare": "vp config && effect-tsgo patch --typescript --oxlint"
   },
   "devDependencies": {
     "@changesets/cli": "catalog:",
+    "@effect/language-service": "catalog:",
+    "@effect/tsgo": "catalog:",
     "@enfect/oxlint": "catalog:",
+    "@typescript/native": "catalog:",
     "@vitest/coverage-istanbul": "catalog:",
+    "effect": "catalog:",
     "fallow": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",

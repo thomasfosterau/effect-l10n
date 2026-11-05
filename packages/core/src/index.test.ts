@@ -1,6 +1,11 @@
-import { expect, test } from "vite-plus/test";
-import { name } from "./index";
+import { assert, it } from "@effect/vitest";
+import * as Effect from "effect/Effect";
 
-test("exports name", () => {
-  expect(name).toBe("effect-l10n");
-});
+// A toolchain smoke test: `effect` resolves to the workspace singleton, the
+// patched `tsc` type-checks Effect code, and `@effect/vitest` runs it.
+it.effect("runs an Effect program", () =>
+  Effect.gen(function* () {
+    const name = yield* Effect.succeed("effect-l10n");
+    assert.strictEqual(name, "effect-l10n");
+  }),
+);

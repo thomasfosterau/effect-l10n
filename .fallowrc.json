@@ -1,6 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
   "entry": ["packages/*/src/**/*.test.ts", "vite.config.ts", "packages/*/vite.config.ts"],
+  "ignoreDependencies": ["@typescript/native", "effect"],
   "rules": {
     "unused-files": "error",
     "unused-exports": "error",

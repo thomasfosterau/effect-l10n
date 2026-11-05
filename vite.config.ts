@@ -1,3 +1,4 @@
+import { recommended as effectTsgo } from "@effect/tsgo/oxlint-presets";
 import effect from "@enfect/oxlint";
 import { defineConfig } from "vite-plus";
 
@@ -52,7 +53,10 @@ export default defineConfig({
     },
   },
   lint: {
-    extends: [effect.configs.recommended],
+    // `@effect/tsgo`'s preset (the language service's diagnostics as
+    // `effecttsgo/*` rules, through the patched oxlint) and `@enfect/oxlint`'s
+    // Effect rules.
+    extends: [effectTsgo, effect.configs.recommended],
     plugins: ["eslint", "typescript", "unicorn", "oxc", "import", "promise", "vitest", "jsdoc"],
     // Oxlint's own categories on top of the Effect preset: `correctness`
     // (the default), plus `suspicious` and `perf`, at `error` like the preset.
@@ -69,7 +73,22 @@ export default defineConfig({
       "eslint/no-underscore-dangle": ["error", { allow: ["_tag"] }],
       // `@since` / `@category` are Effect's doc-comment tags.
       "jsdoc/check-tag-names": ["error", { definedTags: ["since", "category"] }],
+      // `@effect/vitest`'s `it` (every Effect test case) is marked
+      // `@stability unstable`. The patched `tsc` still reports each use as a
+      // suggestion (tsconfig.base.json's `diagnosticSeverity`), so the lint
+      // copy would only repeat it as a warning on every test.
+      "effecttsgo/unstable-api-usage": "off",
     },
+    overrides: [
+      // A package scaffolded ahead of its milestone (AGENTS.md#packages) has
+      // an entry holding only its module doc comment: there is nothing to
+      // export until the milestone starts, and inventing a placeholder
+      // export would ship API nobody designed.
+      {
+        files: ["packages/*/src/index.ts"],
+        rules: { "unicorn/no-empty-file": "off" },
+      },
+    ],
     ignorePatterns: ["**/dist/**", "coverage/**"],
     // Type-aware rules through oxlint-tsgolint (bundled with vite-plus, no
     // separate install). tsgolint reads each file's nearest tsconfig.json

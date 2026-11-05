@@ -48,6 +48,9 @@ jobs:
             vp-task-v1-${{ runner.os }}-node${{ matrix.node-version }}-
       - name: Format and lint (type-aware)
         run: pnpm exec vp check
+      # The native TS7 `tsc`, patched with the Effect language service by the
+      # root `prepare` during the setup action's install, so Effect
+      # diagnostics fail CI like type errors do.
       - name: Type gate
         run: pnpm exec vp run check
       - name: Unit tests
