@@ -5,16 +5,22 @@
   "scripts": {
     "changeset": "changeset",
     "version-packages": "changeset version && vp fmt && pnpm install --lockfile-only",
-    "release": "vp run -r build && changeset publish",
+    "release": "vp run -r build && pnpm -r --filter \"./packages/*\" publish --access public --no-git-checks --ignore-scripts && changeset tag",
     "fallow": "fallow --summary",
     "fallow:audit": "fallow audit",
-    "prepare": "vp config"
+    "prepare": "vp config && effect-tsgo patch --typescript --oxlint"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "catalog:",
     "@changesets/cli": "catalog:",
+    "@effect/language-service": "catalog:",
+    "@effect/tsgo": "catalog:",
     "@enfect/oxlint": "catalog:",
+    "@typescript/native": "catalog:",
     "@vitest/coverage-istanbul": "catalog:",
+    "effect": "catalog:",
     "fallow": "catalog:",
+    "publint": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vite-plus": "catalog:",

@@ -1,16 +1,39 @@
 {
   "name": "@effect-l10n/core",
   "version": "0.0.0",
-  "description": "Effect library for i18n, g11n and l10n",
+  "private": true,
+  "description": "Locales, Message.make, catalogs, translations and defineConfig for effect-l10n",
+  "keywords": [
+    "catalog",
+    "effect",
+    "i18n",
+    "l10n",
+    "locale",
+    "messages",
+    "typescript"
+  ],
+  "homepage": "https://github.com/thomasfosterau/effect-l10n/tree/main/packages/core#readme",
+  "bugs": {
+    "url": "https://github.com/thomasfosterau/effect-l10n/issues"
+  },
   "license": "MIT",
+  "author": "Thomas Foster <me@thomasfoster.au>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomasfosterau/effect-l10n.git",
+    "directory": "packages/core"
+  },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.mts",
-      "default": "./dist/index.mjs"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "publishConfig": {
@@ -18,5 +41,16 @@
   },
   "scripts": {
     "dev": "vp pack --watch"
+  },
+  "devDependencies": {
+    "@effect/language-service": "catalog:",
+    "@effect/vitest": "catalog:",
+    "effect": "catalog:"
+  },
+  "peerDependencies": {
+    "effect": "catalog:peers"
+  },
+  "engines": {
+    "node": ">=22.18.0"
   }
 }

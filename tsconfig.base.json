@@ -1,4 +1,5 @@
 {
+  "$schema": "./node_modules/@effect/tsgo/schema.json",
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["ES2022"],
@@ -6,7 +7,14 @@
     "moduleResolution": "Bundler",
     "moduleDetection": "force",
     "strict": true,
+    // Optional members a caller may forward `undefined` for are spelled
+    // `?: T | undefined` because of this flag (AGENTS.md#conventions).
     "exactOptionalPropertyTypes": true,
+    // An index read (`record[key]`, `array[i]`) is `T | undefined`: the MF2
+    // parser and the catalogs index heavily, and a missing message or
+    // variant must be handled, never assumed.
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
     "noImplicitOverride": true,
     "noFallthroughCasesInSwitch": true,
     "declaration": true,
@@ -14,6 +22,25 @@
     "isolatedModules": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "plugins": [
+      {
+        // The Effect language service. Editors load it into the TS6 tsserver
+        // (`typescript` in the catalog); the `check` tasks' native `tsc` is
+        // patched by @effect/tsgo (the root `prepare`) and reads this same
+        // entry, so the editor and the gate report the same Effect rules.
+        "name": "@effect/language-service",
+        // A "warning" still fails the patched `tsc` by default; this keeps
+        // warnings visible in the editor without blocking the gate. Errors
+        // (and every plain TypeScript error) still fail it.
+        "ignoreEffectWarningsInTscExitCode": true,
+        "diagnosticSeverity": {
+          // `@effect/vitest`'s `it` (every Effect test) and much of Effect 4
+          // are marked `@stability unstable`; as a warning this would fire on
+          // every test case and bury the warnings that matter.
+          "unstableApiUsage": "suggestion"
+        }
+      }
+    ]
   }
 }

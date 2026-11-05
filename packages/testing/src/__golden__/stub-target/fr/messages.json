@@ -1,0 +1,4 @@
+{
+  "cart.items": "{$count :integer} articles",
+  "greeting": "Bonjour, {$name} !"
+}

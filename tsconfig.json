@@ -2,5 +2,5 @@
   // The root configs only. Each package has its own tsconfig.json, which
   // oxlint-tsgolint (type-aware `vp check`) reads as the nearest one.
   "extends": "./tsconfig.base.json",
-  "include": ["vite.config.ts"]
+  "include": ["vite.config.ts", "vite.package.ts"]
 }

@@ -15,19 +15,26 @@
 # - `toolchain`: `vite` (the vite-plus core alias), `vitest` and `@vitest/*`
 #   must equal what that vite-plus release pins (it also pins oxlint, oxfmt
 #   and oxlint-tsgolint), and the Effect lint preset (`@enfect/oxlint`) rides
-#   with the oxlint it loads into. `@effect/tsgo` and `@typescript/native` are
-#   listed so the family's groups stay identical (this repo does not use them
-#   yet).
-# - `effect`: the Effect 4 line is lockstep-versioned (none installed yet).
+#   with the oxlint it loads into. `@effect/tsgo` patches the native `tsc`
+#   (`@typescript/native`) and oxlint-tsgolint, and hard-errors at install on
+#   any version it does not support, so it moves with both: when a toolchain
+#   PR goes red at install, move the `@effect/tsgo` pin by hand on its branch
+#   (read the catalog comment first).
+# - `effect`: the Effect 4 line is lockstep-versioned (`effect`,
+#   `@effect/vitest`, `@effect/language-service` rides along).
 # - `changesets`, `fallow`: each moves on its own line.
 #
 # By hand, because Dependabot cannot bump them: the `vite` catalog entry is an
 # npm alias (`npm:@voidzero-dev/vite-plus-core@<v>`) that must equal
 # `vite-plus`, so set it in the toolchain PR that moves `vite-plus` (or run
 # `pnpm exec vp migrate`, which re-pins it and `vitest`, then drop any
-# `minimumReleaseAgeExclude` entries it adds); and the `vite@*` / `vitest@*`
-# keys under pnpm-workspace.yaml's `overrides` point at `catalog:`, so they
-# follow their catalog entries.
+# `minimumReleaseAgeExclude` entries it adds); `typescript`
+# (`npm:@typescript/typescript6@<v>`) and `@typescript/native`
+# (`npm:typescript@<v>`) are npm aliases too, set by hand (the native one in
+# lockstep with `@effect/tsgo`); the `peers` catalog's ranges are raised by
+# hand (a breaking change); and the `effect` / `vite@*` / `vitest@*` keys under
+# pnpm-workspace.yaml's `overrides` point at `catalog:`, so they follow their
+# catalog entries.
 #
 # `cooldown`: pnpm-workspace.yaml's `minimumReleaseAge` is 480 minutes (8
 # hours), and Dependabot's cooldown takes whole days only, so it is 1 day:

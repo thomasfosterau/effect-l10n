@@ -3,7 +3,8 @@ name: Release
 # Changesets release flow: on every push to `main`, changesets/action either
 # opens/updates the "Version Packages" PR (when unreleased changesets exist)
 # or, once that PR has merged and no changesets remain, publishes the
-# packages to npm and tags the release.
+# packages to npm through trusted publishing (OIDC) and tags the release.
+# PUBLISHING.md has the flow and the owner's one-time setup.
 
 on:
   push:
@@ -18,13 +19,20 @@ permissions: {}
 jobs:
   release:
     name: Version or publish
-    # Never on forks, and never for Dependabot: this job holds the npm token.
+    # Never on forks (they have neither the environment nor the trusted
+    # publisher binding), and never for Dependabot: this job holds
+    # `id-token: write` and the release environment.
     if: github.repository == 'thomasfosterau/effect-l10n' && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # A protected GitHub Environment (manual approval, `main` only) and the
+    # environment npm's trusted publisher is bound to. See PUBLISHING.md for
+    # the one-time setup.
+    environment: release
     permissions:
       contents: write # push the version commit/tag and the "Version Packages" PR branch
       pull-requests: write # open/update the "Version Packages" PR
+      id-token: write # OIDC: prove this workflow's identity to npm (trusted publishing; no token)
     env:
       # pnpm defaults `verify-deps-before-run` to `install`: before a `pnpm run`
       # / `pnpm exec` whose manifests look newer than the last install, it
@@ -58,10 +66,25 @@ jobs:
 
       # --ignore-scripts stops a compromised dependency from running install
       # scripts in the privileged publish job. It also skips the root
-      # `prepare` (the Vite+ git hooks), which the build does not need.
+      # `prepare` (the Vite+ git hooks and the @effect/tsgo patch), neither of
+      # which the `vp pack` build needs.
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
 
+      # While changesets are pending this opens/updates the "Version
+      # Packages" PR (`pnpm run version-packages`). Once it has merged, it
+      # runs `pnpm run release`: build every package, then
+      # `pnpm -r publish --ignore-scripts`, which rewrites `catalog:` /
+      # `workspace:` specifiers, skips private packages and versions npm
+      # already has, and publishes through npm trusted publishing: pnpm
+      # exchanges this job's OIDC token for a short-lived npm token, so there
+      # is no NPM_TOKEN to steal. Provenance is attached automatically (the
+      # repository and the packages are public). `changeset tag` then prints
+      # the `New tag:` lines the action pushes as tags and GitHub releases.
+      #
+      # Every package is `private` until it ships its first API (AGENTS.md),
+      # so until then this step publishes nothing.
+      #
       # v2 of the action pairs with Changesets CLI v3 and renamed v1's
       # `version` / `publish` / `commit` / `title` inputs.
       - name: Create release PR or publish to npm
@@ -73,5 +96,3 @@ jobs:
           pr-title: "chore: version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

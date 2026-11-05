@@ -48,11 +48,44 @@ jobs:
             vp-task-v1-${{ runner.os }}-node${{ matrix.node-version }}-
       - name: Format and lint (type-aware)
         run: pnpm exec vp check
+      # The native TS7 `tsc`, patched with the Effect language service by the
+      # root `prepare` during the setup action's install, so Effect
+      # diagnostics fail CI like type errors do.
       - name: Type gate
         run: pnpm exec vp run check
       - name: Unit tests
         run: pnpm exec vp run -r test:unit
       - name: Build
         run: pnpm exec vp run -r build
+      # publint + attw over what each package would publish.
+      - name: Package lint
+        run: pnpm exec vp run -r check:package
       - name: Audit
         run: pnpm audit --audit-level high
+
+  # Advisory, never required: a PR that changes a package without a
+  # changeset gets a warning annotation (AGENTS.md says which changes need
+  # one; private packages are outside Changesets until their first release).
+  changeset:
+    name: changeset status
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # `changeset status --since` diffs against the base branch.
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+        with:
+          node-version: "24"
+      - name: Check for a changeset
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if ! pnpm exec changeset status --since="origin/${BASE_REF}"; then
+            echo "::warning title=No changeset::This PR changes a published package without a changeset. Run \`pnpm changeset\` unless the change is docs-, CI- or tooling-only (AGENTS.md#branches-and-pull-requests)."
+          fi

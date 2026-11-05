@@ -1,3 +1,4 @@
+import { recommended as effectTsgo } from "@effect/tsgo/oxlint-presets";
 import effect from "@enfect/oxlint";
 import { defineConfig } from "vite-plus";
 
@@ -11,14 +12,21 @@ const cacheInputs = [{ auto: true }, "!node_modules/**", "!coverage/**", "pnpm-l
 export default defineConfig({
   // The gates are Vite Task tasks rather than package.json scripts, so they are
   // cached and `vp run check` never collides with the built-in `vp check`.
-  // Each package declares its own `check`, `build` and `test:unit`
-  // (packages/*/vite.config.ts); the root `check` runs them first.
+  // Each package's `check`, `build` and `test:unit` come from the shared
+  // vite.package.ts (instantiated by packages/*/vite.config.ts); the root
+  // `check` runs them first.
   run: {
     tasks: {
       // The type gate: every package's `tsc`, then the root configs.
       check: {
         command: "tsc --noEmit -p tsconfig.json",
-        dependsOn: ["@effect-l10n/core#check"],
+        // Every package's type gate; a new package adds its own edge here.
+        dependsOn: [
+          "@effect-l10n/messageformat#check",
+          "@effect-l10n/core#check",
+          "@effect-l10n/compiler#check",
+          "@effect-l10n/testing#check",
+        ],
         cache: { input: cacheInputs, output: [] },
       },
       // Uncached: it exists to write `coverage/coverage-final.json`, which the
@@ -52,7 +60,10 @@ export default defineConfig({
     },
   },
   lint: {
-    extends: [effect.configs.recommended],
+    // `@effect/tsgo`'s preset (the language service's diagnostics as
+    // `effecttsgo/*` rules, through the patched oxlint) and `@enfect/oxlint`'s
+    // Effect rules.
+    extends: [effectTsgo, effect.configs.recommended],
     plugins: ["eslint", "typescript", "unicorn", "oxc", "import", "promise", "vitest", "jsdoc"],
     // Oxlint's own categories on top of the Effect preset: `correctness`
     // (the default), plus `suspicious` and `perf`, at `error` like the preset.
@@ -69,7 +80,31 @@ export default defineConfig({
       "eslint/no-underscore-dangle": ["error", { allow: ["_tag"] }],
       // `@since` / `@category` are Effect's doc-comment tags.
       "jsdoc/check-tag-names": ["error", { definedTags: ["since", "category"] }],
+      // `@effect/vitest`'s `it` (every Effect test case) is marked
+      // `@stability unstable`. The patched `tsc` still reports each use as a
+      // suggestion (tsconfig.base.json's `diagnosticSeverity`), so the lint
+      // copy would only repeat it as a warning on every test.
+      "effecttsgo/unstable-api-usage": "off",
+      // Vitest's `expect(value, message)` takes a failure message as its
+      // second argument; the rule's default of one argument is Jest's.
+      "vitest/valid-expect": ["error", { maxArgs: 2 }],
     },
+    overrides: [
+      // A package scaffolded ahead of its milestone (AGENTS.md#packages) has
+      // an entry holding only its module doc comment: there is nothing to
+      // export until the milestone starts, and inventing a placeholder
+      // export would ship API nobody designed.
+      {
+        files: ["packages/*/src/index.ts"],
+        rules: { "unicorn/no-empty-file": "off" },
+      },
+      // The shared assertion helpers (`expectGoldenTree`) wrap `expect` and
+      // are only ever called from inside a test block in another package.
+      {
+        files: ["packages/testing/src/**/*.ts"],
+        rules: { "vitest/no-standalone-expect": "off" },
+      },
+    ],
     ignorePatterns: ["**/dist/**", "coverage/**"],
     // Type-aware rules through oxlint-tsgolint (bundled with vite-plus, no
     // separate install). tsgolint reads each file's nearest tsconfig.json
@@ -82,7 +117,14 @@ export default defineConfig({
     },
   },
   fmt: {
-    ignorePatterns: ["**/dist/**", "coverage/**", "CHANGELOG.md", ".changeset/*.md"],
+    // `__golden__/` holds committed target output, compared byte for byte.
+    ignorePatterns: [
+      "**/dist/**",
+      "coverage/**",
+      "**/__golden__/**",
+      "CHANGELOG.md",
+      ".changeset/*.md",
+    ],
     sortPackageJson: true,
   },
 });
