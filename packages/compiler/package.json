@@ -3,9 +3,29 @@
   "version": "0.0.0",
   "private": true,
   "description": "The effect-l10n compiler: the Compiler service, the Target interface, the IR, lowering passes and diagnostics",
+  "keywords": [
+    "codegen",
+    "compiler",
+    "effect",
+    "i18n",
+    "l10n",
+    "typescript"
+  ],
+  "homepage": "https://github.com/thomasfosterau/effect-l10n/tree/main/packages/compiler#readme",
+  "bugs": {
+    "url": "https://github.com/thomasfosterau/effect-l10n/issues"
+  },
   "license": "MIT",
+  "author": "Thomas Foster <me@thomasfoster.au>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomasfosterau/effect-l10n.git",
+    "directory": "packages/compiler"
+  },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "type": "module",
   "sideEffects": false,
@@ -27,5 +47,8 @@
   },
   "peerDependencies": {
     "effect": "catalog:peers"
+  },
+  "engines": {
+    "node": ">=22.18.0"
   }
 }

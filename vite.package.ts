@@ -1,6 +1,6 @@
 /**
  * The Vite+ configuration every package in this workspace shares: the task
- * graph (`check`, `build`, `test:unit`), the `vp pack` (tsdown) settings and
+ * graph (`check`, `build`, `check:package`, `test:unit`), the `vp pack` (tsdown) settings and
  * the Vitest settings. Each `packages/<name>/vite.config.ts` is a one-call
  * instantiation of it, so a new package copies one line rather than a config.
  */
@@ -37,6 +37,16 @@ export const packageConfig = () =>
           command: "vp pack",
           dependsOn: [siblingBuild],
           cache: { input: cacheInputs, output: ["dist/**"] },
+        },
+        // What npm would receive (both pack with `npm pack`, which needs no
+        // pnpm self-switch and lists the same files): publint lints the manifest and `exports`
+        // against the files, and attw resolves the packed tarball's types
+        // the way each consumer `moduleResolution` does (ESM only, so the
+        // CommonJS `node10` / `node16-cjs` modes are out of profile).
+        "check:package": {
+          command: "publint --strict --pack npm && attw --pack . --profile esm-only",
+          dependsOn: ["build"],
+          cache: { input: cacheInputs, output: [] },
         },
         "test:unit": {
           command: "vp test run",

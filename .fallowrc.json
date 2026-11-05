@@ -6,7 +6,7 @@
     "vite.package.ts",
     "packages/*/vite.config.ts"
   ],
-  "ignoreDependencies": ["@typescript/native", "effect"],
+  "ignoreDependencies": ["@arethetypeswrong/cli", "@typescript/native", "effect"],
   "rules": {
     "unused-files": "error",
     "unused-exports": "error",

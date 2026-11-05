@@ -23,7 +23,7 @@ Dependencies point one way, `messageformat` ← `core` ← `compiler` ← target
 
 - **Never edit a version in a `package.json`.** Versions live in the `pnpm-workspace.yaml` catalog (`catalogMode: strict`). After editing it, run `pnpm install` and commit `pnpm-lock.yaml`, or CI fails with `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`. `vite-plus`, `vite`, `vitest`, `@vitest/*`, `@enfect/oxlint`, `@effect/tsgo` and `@typescript/native` move together (`@effect/tsgo` hard-errors at install on a `tsc` or oxlint it does not support: read its catalog comment before bumping any of them); Dependabot's `toolchain` group bumps them as one PR, except the `vite` npm alias (`npm:@voidzero-dev/vite-plus-core@<v>`, equal to `vite-plus`), which Dependabot cannot bump: set it by hand in that PR, or run `pnpm exec vp migrate` (then drop any `minimumReleaseAgeExclude` entries it adds). `.github/dependabot.yml`'s header lists the hand moves. `minimumReleaseAge` holds new versions for 8 hours (480 minutes); Dependabot's cooldown is 1 day.
 - **`dist/` is the product.** Each package is a `vp pack` (tsdown) library; `exports` points at `dist/`.
-- **Every package is `"private": true` until it ships a public API.** `changeset publish` skips private packages, so the Release job publishes nothing while the workspace is scaffolding (an empty `0.0.0` publish only 404s: npm has no trusted publisher for an unpublished name). The PR that gives a package its first real API removes `private` and adds the changeset that releases it as `0.1.0`.
+- **Every package is `"private": true` until it ships a public API.** Changesets ignores private packages and `pnpm -r publish` skips them, so the Release job versions and publishes nothing while the workspace is scaffolding (an empty `0.0.0` publish only 404s: npm has no trusted publisher for an unpublished name). The PR that gives a package its first real API removes `private` and adds the changeset that releases it as `0.1.0` ([PUBLISHING.md](PUBLISHING.md)).
 - **`effect` is a peer, never a dependency.** A package that imports it declares `effect: "catalog:peers"` under `peerDependencies` and `effect: "catalog:"` under `devDependencies`; the `effect` override keeps one copy in the tree, because two break `Context` / `Layer` / `Schema` identity.
 - **TypeScript 6 and 7 side by side.** `typescript` is the TS6 JS compiler (`npm:@typescript/typescript6`, bin `tsc6`) for JS-API consumers: the editor's tsserver with the `@effect/language-service` plugin, and `vp pack`'s declaration bundler. `@typescript/native` is TS7 (bin `tsc`), which the `check` tasks run. The root `prepare` (`effect-tsgo patch --typescript --oxlint`) patches that `tsc` and oxlint-tsgolint with the Effect language service, so the type gate and type-aware lint report Effect diagnostics (a floating `Effect`, a missing `yield*`) as errors. An install with `--ignore-scripts` leaves them unpatched.
 
@@ -39,8 +39,9 @@ Dependencies point one way, `messageformat` ← `core` ← `compiler` ← target
 - `vp check` — format + lint (Oxfmt + Oxlint: `@enfect/oxlint`'s `recommended` Effect rules, `@effect/tsgo`'s preset (the language service's diagnostics as `effecttsgo/*` rules), Oxlint's `correctness`, `suspicious` and `perf` categories over the `typescript`, `unicorn`, `oxc`, `import`, `promise`, `vitest` and `jsdoc` plugins, and `vite-plus/prefer-vite-plus-imports`). Lint is type-aware through oxlint-tsgolint (`typeAware` + `typeCheck`), which reads each file's nearest `tsconfig.json`. `vp run check` — the type gate (the Effect-patched native `tsc --noEmit` per package, then the root configs); the issue tracker's `pnpm typecheck` is this task. They are different commands.
 - `vp run -r test:unit` — unit tests.
 - `vp run -r build` — `vp pack` → every package's `dist/`.
+- `vp run -r check:package` — publint and `attw --pack` (ESM-only profile) over what each package would publish.
 - `vp run test:coverage` — every package's suite under one Istanbul map at `coverage/coverage-final.json`, which `fallow audit` reads for per-function CRAP scores.
-- `pnpm changeset` — add a changeset.
+- `pnpm changeset` — add a changeset (`changeset status --since origin/main` shows what it would release).
 
 Invoke everything through `vp` (`vp exec` instead of `npx`; `vp run <task>` instead of bare `pnpm`). The sanctioned non-`vp` invocations: `pnpm install` (`--frozen-lockfile` in CI), `pnpm audit`, and `pnpm changeset` / the release scripts.
 
@@ -53,15 +54,16 @@ Before you report work as done, run the gates below in order and quote each comm
 3. `vp run check`
 4. `vp run -r test:unit`
 5. `vp run -r build`
-6. `pnpm audit --audit-level high` (network)
-7. `vp run test:coverage`, then `fallow audit --format json --quiet --explain --gate-marker agent --base origin/main` (the fallow gate below; not a CI step).
+6. `vp run -r check:package` (publint + attw over each package's packed tarball)
+7. `pnpm audit --audit-level high` (network)
+8. `vp run test:coverage`, then `fallow audit --format json --quiet --explain --gate-marker agent --base origin/main` (the fallow gate below; not a CI step).
 
-Steps 2–6 are CI's `ci` job, in its order, on Node 22 and 24 ([ci.yml](.github/workflows/ci.yml)). Every workflow defaults to `permissions: {}`, pins each action to a commit SHA, checks out without persisted credentials (except the Release job, whose Changesets step pushes), and never runs the Release job for Dependabot; CI needs no secret, so Dependabot PRs run it safely. `uvx zizmor --offline .github` audits the workflows.
+Steps 2–7 are CI's `ci` job, in its order, on Node 22 and 24 ([ci.yml](.github/workflows/ci.yml)). Every workflow defaults to `permissions: {}`, pins each action to a commit SHA, checks out without persisted credentials (except the Release job, whose Changesets step pushes), and never runs the Release job for Dependabot; the `ci` workflow's advisory `changeset status` job only annotates; CI needs no secret, so Dependabot PRs run it safely. `uvx zizmor --offline .github` audits the workflows.
 
 ## Branches and pull requests
 
 - Branch off `main`; PR against `main`; squash-merge with a conventional prefix (`feat:`, `fix:`, `docs:`, `chore:`). Rebase onto `origin/main` before opening or updating a PR; never merge `main` into your branch.
-- Every change to a published package's behaviour carries a changeset (`pnpm changeset`); docs-, CI- and tooling-only changes need none. Never publish or version by hand: the Release workflow opens the version PR (`chore: version packages`) and the owner merges it.
+- Every change to a published package's behaviour carries a changeset (`pnpm changeset`); docs-, CI- and tooling-only changes need none. Never publish or version by hand: the Release workflow opens the version PR (`chore: version packages`) and the owner merges it; publishing is npm trusted publishing (OIDC) from the protected `release` environment, with no `NPM_TOKEN` ([PUBLISHING.md](PUBLISHING.md)). A private package needs no changeset: Changesets ignores it until the PR that removes `private`.
 - GitHub writes go to `thomasfosterau/effect-l10n` only.
 
 ## Effect

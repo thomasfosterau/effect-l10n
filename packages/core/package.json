@@ -3,9 +3,30 @@
   "version": "0.0.0",
   "private": true,
   "description": "Locales, Message.make, catalogs, translations and defineConfig for effect-l10n",
+  "keywords": [
+    "catalog",
+    "effect",
+    "i18n",
+    "l10n",
+    "locale",
+    "messages",
+    "typescript"
+  ],
+  "homepage": "https://github.com/thomasfosterau/effect-l10n/tree/main/packages/core#readme",
+  "bugs": {
+    "url": "https://github.com/thomasfosterau/effect-l10n/issues"
+  },
   "license": "MIT",
+  "author": "Thomas Foster <me@thomasfoster.au>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomasfosterau/effect-l10n.git",
+    "directory": "packages/core"
+  },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "type": "module",
   "sideEffects": false,
@@ -28,5 +49,8 @@
   },
   "peerDependencies": {
     "effect": "catalog:peers"
+  },
+  "engines": {
+    "node": ">=22.18.0"
   }
 }
