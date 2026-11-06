@@ -12,6 +12,7 @@ import * as FileSystem from "effect/FileSystem";
 import * as Layer from "effect/Layer";
 import * as Path from "effect/Path";
 import * as R from "effect/Record";
+import * as Schema from "effect/Schema";
 import * as Str from "effect/String";
 import { expect } from "vite-plus/test";
 
@@ -36,6 +37,18 @@ export const layer: Layer.Layer<FileSystem.FileSystem | Path.Path> = Layer.merge
 );
 
 /**
+ * An emitted file differs from its committed snapshot (or has none): the
+ * rejection of Vitest's `toMatchFileSnapshot`, with its diff as the cause.
+ *
+ * @since 0.1.0
+ * @category errors
+ */
+export class GoldenFileMismatch extends Schema.TaggedError<
+  GoldenFileMismatch,
+  { readonly brand: unique symbol }
+>()("GoldenFileMismatch", { file: Schema.String, cause: Schema.Defect() }) {}
+
+/**
  * Asserts that `tree` matches the snapshots under `directory`, one committed
  * file per emitted file, through Vitest's `toMatchFileSnapshot`. A missing or
  * changed snapshot fails the test; `vp test run -u` writes the emitted tree
@@ -57,9 +70,10 @@ export const expectGoldenTree = Effect.fn("expectGoldenTree")(function* (
     emitted,
     (file) =>
       // A mismatch rejects with Vitest's diff, which fails the test.
-      Effect.tryPromise(() =>
-        expect(tree[file], file).toMatchFileSnapshot(path.join(directory, file)),
-      ),
+      Effect.tryPromise({
+        try: () => expect(tree[file], file).toMatchFileSnapshot(path.join(directory, file)),
+        catch: (cause) => new GoldenFileMismatch({ file, cause }),
+      }),
     // One at a time: Vitest's snapshot state is not built for interleaved writes.
     { concurrency: 1, discard: true },
   );
