@@ -86,9 +86,19 @@ catalog:
 # strict catalog mode still governs them while they stay ranges. `pnpm
 # publish` replaces `catalog:peers` with these ranges in the published
 # manifest. Raising a floor is a breaking change for every published package.
+#
+# The owner's peer-range policy: `effect` is `^4.0.0`, decided per package. A
+# package whose own dependencies require a newer `effect` gets a named
+# catalog of its own whose comment names that dependency; our own code using
+# a newer API is never a reason (make it work on 4.0.0 instead).
 catalogs:
   peers:
-    effect: ^4.1.0
+    effect: ^4.0.0
+  # `@thomasfosterau/effect-l10n-testing` only (private, never published): its
+  # dependency @effect/platform-node-shared, pinned above at 4.1.2, declares
+  # `effect: ^4.1.2`. Move it with that pin.
+  platform-node-peers:
+    effect: ^4.1.2
 
 overrides:
   # `effect` MUST be a singleton: two copies break Context / Layer / Schema
