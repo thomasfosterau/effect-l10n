@@ -4,7 +4,7 @@ effect-l10n is maintained by Thomas Foster, with a workflow meant to suit both p
 
 ## Setup
 
-Open in a Codespace or Dev Container: `.devcontainer/` provisions it with the same hook as agent sessions.
+Open in a Codespace or Dev Container: `.devcontainer/` provisions it with the same hook as agent sessions. The `Dev Container` workflow (`.github/workflows/devcontainer.yml`) builds it in CI whenever its inputs change; to try a change locally, `pnpm dlx @devcontainers/cli@0.89.0 up --workspace-folder .` (needs Docker).
 
 You need **Node ≥ 22.18** (`.node-version` names the major CI's floor runs; CI also runs the current LTS, 24) and **pnpm 12.15.0**, the version `packageManager` in `package.json` pins.
 
