@@ -4,6 +4,8 @@ effect-l10n is maintained by Thomas Foster, with a workflow meant to suit both p
 
 ## Setup
 
+Open in a Codespace or Dev Container: `.devcontainer/` provisions it with the same hook as agent sessions.
+
 You need **Node ≥ 22.18** (`.node-version` names the major CI's floor runs; CI also runs the current LTS, 24) and **pnpm 12.15.0**, the version `packageManager` in `package.json` pins.
 
 1. Install pnpm. With Node 22 or 24, `corepack enable` makes `pnpm` resolve to the pinned version on first use. Corepack cannot fetch pnpm 12 in some environments (an old Corepack signing key, or no Corepack at all on Node ≥ 25); then run pnpm through npm instead: `npm install -g pnpm@12.15.0`, or one-off `npx pnpm@12.15.0 install`.
