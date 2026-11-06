@@ -20,8 +20,14 @@ const cacheInputs = [{ auto: true }, "!node_modules/**", "!dist/**", "../../pnpm
  */
 const siblingBuild = { task: "build", from: "dependencies" } as const;
 
-/** The shared configuration, for a package's `vite.config.ts` to export. */
-export const packageConfig = () =>
+/**
+ * The shared configuration, for a package's `vite.config.ts` to export.
+ * `entry` is the `vp pack` entries by output path under `dist/` (without the
+ * extension), one per `exports` subpath; it defaults to `src/index.ts` alone.
+ */
+export const packageConfig = (
+  entry: Readonly<Record<string, string>> = { index: "src/index.ts" },
+) =>
   defineConfig({
     run: {
       tasks: {
@@ -56,7 +62,7 @@ export const packageConfig = () =>
       },
     },
     pack: {
-      entry: ["src/index.ts"],
+      entry: { ...entry },
       format: ["esm"],
       platform: "neutral",
       dts: true,

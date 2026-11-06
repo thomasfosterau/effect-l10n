@@ -1,6 +1,6 @@
 # 0006. The package layout
 
-- **Status:** Accepted
+- **Status:** Superseded in part by [0007](0007-single-core-package.md) (the package names, the one-package-per-role split and the scope; the dependency direction and the package template stand)
 - **Date:** 2026-10-29
 - **Issue:** [#14](https://github.com/thomasfosterau/effect-l10n/issues/14), [#15](https://github.com/thomasfosterau/effect-l10n/issues/15)
 
