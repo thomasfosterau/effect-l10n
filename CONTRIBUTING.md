@@ -38,7 +38,7 @@ vp test run -u                             # rewrite snapshots and golden files
 vp run -r build                            # vp pack → every package's dist/
 vp run -r check:package                    # publint + attw over each package's tarball
 vp run test:coverage                       # one Istanbul map for fallow
-fallow audit --base origin/trunk            # the change-set review (not a CI gate)
+vp exec fallow audit --base origin/trunk   # the change-set review (not a CI gate)
 ```
 
 [AGENTS.md](AGENTS.md#verification) lists the full gate list a change must pass, in CI's order.
