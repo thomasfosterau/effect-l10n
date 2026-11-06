@@ -1,18 +1,23 @@
 {
-  "name": "@effect-l10n/core",
+  "name": "@thomasfosterau/effect-l10n",
   "version": "0.0.0",
   "private": true,
-  "description": "Locales, Message.make, catalogs, translations and defineConfig for effect-l10n",
+  "description": "Effect internationalisation and localisation: Unicode MessageFormat 2, the authoring API and the compiler",
   "keywords": [
     "catalog",
+    "codegen",
+    "compiler",
     "effect",
     "i18n",
     "l10n",
     "locale",
+    "messageformat",
     "messages",
+    "mf2",
+    "parser",
     "typescript"
   ],
-  "homepage": "https://github.com/thomasfosterau/effect-l10n/tree/main/packages/core#readme",
+  "homepage": "https://github.com/thomasfosterau/effect-l10n/tree/trunk/packages/core#readme",
   "bugs": {
     "url": "https://github.com/thomasfosterau/effect-l10n/issues"
   },
@@ -34,6 +39,14 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    },
+    "./messageformat": {
+      "types": "./dist/messageformat/index.d.ts",
+      "default": "./dist/messageformat/index.js"
+    },
+    "./compiler": {
+      "types": "./dist/compiler/index.d.ts",
+      "default": "./dist/compiler/index.js"
     }
   },
   "publishConfig": {

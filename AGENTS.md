@@ -1,24 +1,28 @@
 # AGENTS.md
 
-`CLAUDE.md` is a symlink to this file. This repo publishes the `effect-l10n` packages: an experimental Effect library and CLI for internationalisation (i18n), globalisation (g11n) and localisation (l10n). It is a pnpm workspace on [Vite+](https://viteplus.dev) (`vp`), linted with Oxlint and the `@enfect/oxlint` Effect preset and audited with [fallow](https://fallow.tools). The default branch is `main`. Human setup (pnpm 12 without Corepack, the editor's language service) is in [CONTRIBUTING.md](CONTRIBUTING.md), the release pipeline in [PUBLISHING.md](PUBLISHING.md), and the design decisions in [docs/adr/](docs/adr/README.md).
+`CLAUDE.md` is a symlink to this file. This repo publishes the `@thomasfosterau/effect-l10n` packages: an experimental Effect library and CLI for internationalisation (i18n), globalisation (g11n) and localisation (l10n). It is a pnpm workspace on [Vite+](https://viteplus.dev) (`vp`), linted with Oxlint and the `@enfect/oxlint` Effect preset and audited with [fallow](https://fallow.tools). The default branch is `trunk`. Human setup (pnpm 12 without Corepack, the editor's language service) is in [CONTRIBUTING.md](CONTRIBUTING.md), the release pipeline in [PUBLISHING.md](PUBLISHING.md), and the design decisions in [docs/adr/](docs/adr/README.md).
 
 ## Packages
 
-The layout and the dependency direction are [ADR 0006](docs/adr/0006-package-layout.md); every design decision is an [ADR](docs/adr/README.md). Packages are created as their milestone starts.
+The layout is [ADR 0007](docs/adr/0007-single-core-package.md), which supersedes the package split of [ADR 0006](docs/adr/0006-package-layout.md); every design decision is an [ADR](docs/adr/README.md). **One core package**, `@thomasfosterau/effect-l10n`, holds everything platform-neutral that needs no dependency beyond `effect`, one `exports` subpath per layer. **A separate package exists only for platform-specific code or code that brings a dependency** (targets, the CLI, bundler plugins, test helpers): it is `@thomasfosterau/effect-l10n-<name>` in `packages/<name>`, created as its milestone starts.
 
-| Package                      | Directory                | Entries | Milestone                          |
-| ---------------------------- | ------------------------ | ------- | ---------------------------------- |
-| `@effect-l10n/messageformat` | `packages/messageformat` | `.`     | M1 (#4)                            |
-| `@effect-l10n/core`          | `packages/core`          | `.`     | M2 (#5)                            |
-| `@effect-l10n/compiler`      | `packages/compiler`      | `.`     | M3 (#6)                            |
-| `@effect-l10n/testing`       | `packages/testing`       | `.`     | M0 (#18), private, never published |
+| Package / entry                             | Source                             | Milestone                          |
+| ------------------------------------------- | ---------------------------------- | ---------------------------------- |
+| `@thomasfosterau/effect-l10n/messageformat` | `packages/core/src/messageformat/` | M1 (#4)                            |
+| `@thomasfosterau/effect-l10n`               | `packages/core/src/*.ts`           | M2 (#5)                            |
+| `@thomasfosterau/effect-l10n/compiler`      | `packages/core/src/compiler/`      | M3 (#6)                            |
+| `@thomasfosterau/effect-l10n-testing`       | `packages/testing`                 | M0 (#18), private, never published |
 
-Dependencies point one way, `messageformat` ← `core` ← `compiler` ← targets / `interchange` ← `cli` / bundler plugins, enforced by the boundary zones in `.fallowrc.json`; any package's tests may use `@effect-l10n/testing` (golden-file trees; the test strategy is in [CONTRIBUTING.md](CONTRIBUTING.md#testing)). A new package copies `packages/compiler`:
+Imports point one way, `messageformat` ← the root entry ← `compiler` ← targets / interchange ← `cli` / bundler plugins. Inside `packages/core` that is enforced by module boundaries, the zones in `.fallowrc.json`'s `boundaries` (`boundaries.coverage.requireAllFiles` puts every source file in a zone); a subpath imports another through a relative path, never through the package's own name. Any package's tests may use `@thomasfosterau/effect-l10n-testing` (golden-file trees; the test strategy is in [CONTRIBUTING.md](CONTRIBUTING.md#testing)).
 
-- `package.json`: `"private": true` (until its first public API), `"type": "module"`, `"sideEffects": false`, `exports` pointing at `dist/index.js` / `dist/index.d.ts`, the shared metadata (`repository.directory`, `homepage`, `bugs`, `keywords`, `engines`), `effect: "catalog:peers"` as a peer and `effect: "catalog:"` as a dev dependency. A workspace sibling it imports is a `workspace:^` dependency.
-- `vite.config.ts`: `export default packageConfig()` from the root `vite.package.ts`, which defines its `check`, `build` and `test:unit` tasks (each with a build edge on its workspace dependencies) and its `vp pack` and Vitest settings.
+A new **core layer** (platform-neutral, no new dependency) is a directory under `packages/core/src/` with an `index.ts` entry, its subpath in `packages/core/package.json`'s `exports` (`dist/<layer>/index.js` / `.d.ts`), its `vp pack` entry in `packages/core/vite.config.ts`, and its zone and rule in `.fallowrc.json`.
+
+A new **separate package** copies `packages/testing`'s shape, with the published metadata of `packages/core`:
+
+- `package.json`: name `@thomasfosterau/effect-l10n-<name>`, `"private": true` (until its first public API), `"version": "0.0.0"`, `"type": "module"`, `"sideEffects": false`, `exports` pointing at `dist/index.js` / `dist/index.d.ts`, the shared metadata (`repository` naming `thomasfosterau/effect-l10n` with its `directory`, `homepage`, `bugs`, `keywords`, `engines`), `effect: "catalog:peers"` as a peer and `effect: "catalog:"` as a dev dependency. A workspace sibling it imports (the core package included) is a `workspace:^` dependency.
+- `vite.config.ts`: `export default packageConfig()` from the root `vite.package.ts`, which defines its `check`, `build` and `test:unit` tasks (each with a build edge on its workspace dependencies) and its `vp pack` and Vitest settings (`packageConfig({ ... })`, entries by output path, for more than one entry).
 - `tsconfig.json` extending `../../tsconfig.base.json` over `src` and `vite.config.ts`; `src/index.ts` as the entry, tests beside the code as `src/**/*.test.ts`; a `README.md`.
-- Its row in the table above and in ADR 0006, its `#check` edge on the root `check` task (`vite.config.ts`), and its zone and rule in `.fallowrc.json`'s `boundaries`.
+- Its row in the table above, its `#check` edge on the root `check` task (`vite.config.ts`), and its zone and rule in `.fallowrc.json`'s `boundaries`.
 
 ## Common pitfalls
 
@@ -42,7 +46,7 @@ Dependencies point one way, `messageformat` ← `core` ← `compiler` ← target
 - `vp run -r build` — `vp pack` → every package's `dist/`.
 - `vp run -r check:package` — publint and `attw --pack` (ESM-only profile) over what each package would publish.
 - `vp run test:coverage` — every package's suite under one Istanbul map at `coverage/coverage-final.json`, which `fallow audit` reads for per-function CRAP scores.
-- `pnpm changeset` — add a changeset (`changeset status --since origin/main` shows what it would release).
+- `pnpm changeset` — add a changeset (`changeset status --since origin/trunk` shows what it would release).
 
 Invoke everything through `vp` (`vp exec` instead of `npx`; `vp run <task>` instead of bare `pnpm`). The sanctioned non-`vp` invocations: `pnpm install` (`--frozen-lockfile` in CI), `pnpm audit`, and `pnpm changeset` / the release scripts.
 
@@ -57,13 +61,13 @@ Before you report work as done, run the gates below in order and quote each comm
 5. `vp run -r build`
 6. `vp run -r check:package` (publint + attw over each package's packed tarball)
 7. `pnpm audit --audit-level high` (network)
-8. `vp run test:coverage`, then `fallow audit --format json --quiet --explain --gate-marker agent --base origin/main` (the fallow gate below; not a CI step).
+8. `vp run test:coverage`, then `fallow audit --format json --quiet --explain --gate-marker agent --base origin/trunk` (the fallow gate below; not a CI step).
 
 Steps 2–7 are CI's `ci` job, in its order, on Node 22 and 24 ([ci.yml](.github/workflows/ci.yml)). Every workflow defaults to `permissions: {}`, pins each action to a commit SHA, checks out without persisted credentials (except the Release job, whose Changesets step pushes), and never runs the Release job for Dependabot; the `ci` workflow's advisory `changeset status` job only annotates; CI needs no secret, so Dependabot PRs run it safely. `uvx zizmor --offline .github` audits the workflows.
 
 ## Branches and pull requests
 
-- Branch off `main`; PR against `main`; squash-merge with a conventional prefix (`feat:`, `fix:`, `docs:`, `chore:`). Rebase onto `origin/main` before opening or updating a PR; never merge `main` into your branch.
+- Branch off `trunk`; PR against `trunk`; squash-merge with a conventional prefix (`feat:`, `fix:`, `docs:`, `chore:`). Rebase onto `origin/trunk` before opening or updating a PR; never merge `trunk` into your branch.
 - Every change to a published package's behaviour carries a changeset (`pnpm changeset`); docs-, CI- and tooling-only changes need none. Never publish or version by hand: the Release workflow opens the version PR (`chore: version packages`) and the owner merges it; publishing is npm trusted publishing (OIDC) from the protected `release` environment, with no `NPM_TOKEN` ([PUBLISHING.md](PUBLISHING.md)). A private package needs no changeset: Changesets ignores it until the PR that removes `private`.
 - GitHub writes go to `thomasfosterau/effect-l10n` only.
 
@@ -81,13 +85,13 @@ Never guess at an Effect API: read the installed package (`node_modules/effect/A
 ## Agent sessions
 
 - The SessionStart hook (`.claude/hooks/session-start.sh`) installs dependencies against the lockfile and puts `vp` (a re-exec shim that prefers the nearest worktree's `node_modules`) and `fallow` on PATH for non-interactive shells. It hydrates no secrets.
-- A PreToolUse hook (`.claude/hooks/fallow-gate.sh`) blocks `git commit` / `git push` when `fallow audit --base origin/main` fails; it reads the coverage map on disk, so run `vp run test:coverage` first. A PostToolUse hook runs `vp fmt` on every source, JSON, CSS or Markdown file you write or edit.
+- A PreToolUse hook (`.claude/hooks/fallow-gate.sh`) blocks `git commit` / `git push` when `fallow audit --base origin/trunk` fails; it reads the coverage map on disk, so run `vp run test:coverage` first. A PostToolUse hook runs `vp fmt` on every source, JSON, CSS or Markdown file you write or edit.
 
 ---
 
 ## Fallow local gate
 
-Before any `git commit` or `git push`, run `fallow audit --format json --quiet --explain --gate-marker agent --base origin/main`. If the verdict is `fail`, fix the reported findings before retrying. Treat JSON runtime errors like `{ "error": true, ... }` as non-blocking. Audit defaults to `gate=new-only`: only findings introduced by the current changeset affect the verdict.
+Before any `git commit` or `git push`, run `fallow audit --format json --quiet --explain --gate-marker agent --base origin/trunk`. If the verdict is `fail`, fix the reported findings before retrying. Treat JSON runtime errors like `{ "error": true, ... }` as non-blocking. Audit defaults to `gate=new-only`: only findings introduced by the current changeset affect the verdict.
 
 ## Fallow task map
 
@@ -95,6 +99,6 @@ Before any `git commit` or `git push`, run `fallow audit --format json --quiet -
 | ----------------------------------------------------------------- | -------------------------------------------- |
 | delete an "unused" export or file                                 | `fallow dead-code --trace <file>:<export>`   |
 | delete an "unused" dependency                                     | `fallow dead-code --trace-dependency <name>` |
-| commit or open a PR                                               | `fallow audit --base origin/main`            |
+| commit or open a PR                                               | `fallow audit --base origin/trunk`           |
 | check which architecture rules apply to a file before changing it | `fallow guard <files>`                       |
 | understand a finding                                              | `fallow explain <issue-type>`                |

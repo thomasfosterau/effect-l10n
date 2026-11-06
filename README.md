@@ -15,7 +15,15 @@ The agreed design decisions are recorded as [architecture decision records](docs
 3. [Effect only at build time; web output is plain JS](docs/adr/0003-effect-at-build-time-only.md)
 4. [Typed native accessors alongside the resource files](docs/adr/0004-typed-native-accessors.md)
 5. [Paraglide-style locale strategies for the web runtime](docs/adr/0005-web-locale-strategies.md)
-6. [The package layout](docs/adr/0006-package-layout.md)
+6. [The package layout](docs/adr/0006-package-layout.md) (superseded in part by 0007)
+7. [One core package under the owner's scope](docs/adr/0007-single-core-package.md)
+
+## Packages
+
+| Package                                        | Contents                                                                                                                   |
+| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [`@thomasfosterau/effect-l10n`](packages/core) | The core: the MessageFormat 2 engine (`/messageformat`), the authoring API (the root entry) and the compiler (`/compiler`) |
+| `@thomasfosterau/effect-l10n-<name>`           | Platform targets, the CLI and bundler plugins, each its own package as its milestone starts                                |
 
 ## License
 

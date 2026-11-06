@@ -22,10 +22,8 @@ export default defineConfig({
         command: "tsc --noEmit -p tsconfig.json",
         // Every package's type gate; a new package adds its own edge here.
         dependsOn: [
-          "@effect-l10n/messageformat#check",
-          "@effect-l10n/core#check",
-          "@effect-l10n/compiler#check",
-          "@effect-l10n/testing#check",
+          "@thomasfosterau/effect-l10n#check",
+          "@thomasfosterau/effect-l10n-testing#check",
         ],
         cache: { input: cacheInputs, output: [] },
       },
@@ -90,12 +88,12 @@ export default defineConfig({
       "vitest/valid-expect": ["error", { maxArgs: 2 }],
     },
     overrides: [
-      // A package scaffolded ahead of its milestone (AGENTS.md#packages) has
-      // an entry holding only its module doc comment: there is nothing to
-      // export until the milestone starts, and inventing a placeholder
-      // export would ship API nobody designed.
+      // A package or subpath entry scaffolded ahead of its milestone
+      // (AGENTS.md#packages) holds only its module doc comment: there is
+      // nothing to export until the milestone starts, and inventing a
+      // placeholder export would ship API nobody designed.
       {
-        files: ["packages/*/src/index.ts"],
+        files: ["packages/*/src/index.ts", "packages/*/src/*/index.ts"],
         rules: { "unicorn/no-empty-file": "off" },
       },
       // The shared assertion helpers (`expectGoldenTree`) wrap `expect` and

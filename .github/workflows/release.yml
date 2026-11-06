@@ -1,6 +1,6 @@
 name: Release
 
-# Changesets release flow: on every push to `main`, changesets/action either
+# Changesets release flow: on every push to `trunk`, changesets/action either
 # opens/updates the "Version Packages" PR (when unreleased changesets exist)
 # or, once that PR has merged and no changesets remain, publishes the
 # packages to npm through trusted publishing (OIDC) and tags the release.
@@ -8,7 +8,7 @@ name: Release
 
 on:
   push:
-    branches: [main]
+    branches: [trunk]
 
 concurrency:
   group: release-${{ github.ref }}
@@ -25,7 +25,7 @@ jobs:
     if: github.repository == 'thomasfosterau/effect-l10n' && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    # A protected GitHub Environment (manual approval, `main` only) and the
+    # A protected GitHub Environment (manual approval, `trunk` only) and the
     # environment npm's trusted publisher is bound to. See PUBLISHING.md for
     # the one-time setup.
     environment: release

@@ -40,7 +40,7 @@ catalog:
   # three (toolchain group).
   "@effect/tsgo": 0.63.0
   # The Node `FileSystem` / `Path` layers the golden-file helper
-  # (`@effect-l10n/testing`) runs on. The shared package rather than
+  # (`@thomasfosterau/effect-l10n-testing`) runs on. The shared package rather than
   # @effect/platform-node, whose required `redis` peer pnpm would install.
   # Lockstep with `effect`.
   "@effect/platform-node-shared": 4.1.2
