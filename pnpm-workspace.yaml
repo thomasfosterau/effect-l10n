@@ -10,7 +10,8 @@
 # The toolchain (vite-plus, the Effect lint preset, the TypeScript 6/7 pair,
 # @effect/tsgo, fallow) is kept in step with the sibling Effect libraries
 # (effect-web is the family's reference workspace). Dependabot's groups in
-# .github/dependabot.yml mirror the lockstep sets named below.
+# .github/dependabot.yml cover only the lockstep sets named below (the
+# toolchain group and the Effect line).
 packages:
   - packages/*
 
@@ -47,7 +48,8 @@ catalog:
   # Lockstep with `effect` (the Effect 4 line is released as one version).
   "@effect/vitest": 4.1.2
   # The Effect lint preset (`effect/*` rules, anti-slop included), loaded by
-  # the oxlint vite-plus carries: it moves with `vite-plus` (toolchain group).
+  # the oxlint vite-plus carries. Not in the toolchain group: it takes
+  # `@oxlint/plugins` through a `^` range, so Dependabot proposes it alone.
   "@enfect/oxlint": ^0.9.0
   # Must equal the vitest that vite-plus bundles (see `vitest` below); vite-plus
   # refuses to run coverage on a mismatch (toolchain group).
