@@ -32,14 +32,14 @@ catalog:
   # `prepare`) overwrites the native `tsc` and oxlint-tsgolint binaries with
   # Effect-patched builds matched by gitHead, so this pins in lockstep with
   # `@typescript/native` below and with the oxlint / oxlint-tsgolint that
-  # `vite-plus` carries: 0.63.0 supports typescript 7.0.2, oxlint 1.88.0 -
-  # 1.90.0 and tsgolint 7.0.2004 / 7.0.2005 (vite-plus 1.4.0 carries oxlint
-  # 1.89.0 and tsgolint 7.0.2004). Each release hard-errors
+  # `vite-plus` carries: 0.67.3 patches typescript 7.0.2 and the oxlint
+  # 1.91.0 / tsgolint 7.0.2005 that vite-plus 1.5.0 carries. Each release
+  # hard-errors
   # (UnsupportedTargetPackageVersionError) on any other component version,
   # failing `pnpm install` itself: read the `components` table in
   # node_modules/@effect/tsgo/dist/effect-tsgo.cjs before bumping any of the
   # three (toolchain group).
-  "@effect/tsgo": 0.63.0
+  "@effect/tsgo": 0.67.3
   # The Node `FileSystem` / `Path` layers the golden-file helper
   # (`@thomasfosterau/effect-l10n-testing`) runs on. The shared package rather than
   # @effect/platform-node, whose required `redis` peer pnpm would install.
@@ -50,15 +50,15 @@ catalog:
   # The Effect lint preset (`effect/*` rules, anti-slop included), loaded by
   # the oxlint vite-plus carries. Not in the toolchain group: it takes
   # `@oxlint/plugins` through a `^` range, so Dependabot proposes it alone.
-  "@enfect/oxlint": ^0.9.0
+  "@enfect/oxlint": ^0.10.0
   # Must equal the vitest that vite-plus bundles (see `vitest` below); vite-plus
   # refuses to run coverage on a mismatch (toolchain group).
-  "@vitest/coverage-istanbul": 5.0.5
+  "@vitest/coverage-istanbul": 5.1.0
   # Exact: the singleton every package builds and tests against (see the
   # `effect` override). The range published packages declare is under
   # `catalogs.peers`.
   effect: 4.1.2
-  fallow: 3.37.0
+  fallow: 3.40.0
   # Lints each package's manifest and `exports` against what it publishes
   # (the `check:package` task).
   publint: ^0.3.25
@@ -72,15 +72,15 @@ catalog:
   typescript: "npm:@typescript/typescript6@6.0.2"
   "@typescript/native": "npm:typescript@7.0.2"
   # vite-plus pins `oxlint`, `oxfmt`, `oxlint-tsgolint` and `vitest` to exact
-  # versions: 1.4.0 carries oxlint 1.89.0, oxfmt 0.74.0, oxlint-tsgolint
-  # 7.0.2004 and vitest 5.0.5. `vite` is the same release under its aliased
+  # versions: 1.5.0 carries oxlint 1.91.0, oxfmt 0.76.0, oxlint-tsgolint
+  # 7.0.2005 and vitest 5.1.0. `vite` is the same release under its aliased
   # core package (an npm alias Dependabot cannot bump: set it by hand, or run
   # `pnpm exec vp migrate`, in the toolchain PR). `vitest` must match
   # vite-plus's exact pin because the `vitest@*: "catalog:"` override forces
   # every resolution to this singleton.
-  vite-plus: 1.4.0
-  vite: npm:@voidzero-dev/vite-plus-core@1.4.0
-  vitest: 5.0.5
+  vite-plus: 1.5.0
+  vite: npm:@voidzero-dev/vite-plus-core@1.5.0
+  vitest: 5.1.0
 
 # Peer ranges the PUBLISHED packages declare, kept as a named catalog so the
 # strict catalog mode still governs them while they stay ranges. `pnpm

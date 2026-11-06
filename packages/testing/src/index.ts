@@ -5,4 +5,4 @@
  *
  * @since 0.1.0
  */
-export { expectGoldenTree, layer, type FileTree } from "./golden";
+export { expectGoldenTree, GoldenFileMismatch, layer, type FileTree } from "./golden";
