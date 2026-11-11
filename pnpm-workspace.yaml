@@ -39,7 +39,7 @@ catalog:
   # failing `pnpm install` itself: read the `components` table in
   # node_modules/@effect/tsgo/dist/effect-tsgo.cjs before bumping any of the
   # three (toolchain group).
-  "@effect/tsgo": 0.67.3
+  "@effect/tsgo": 0.67.5
   # The Node `FileSystem` / `Path` layers the golden-file helper
   # (`@thomasfosterau/effect-l10n-testing`) runs on. The shared package rather than
   # @effect/platform-node, whose required `redis` peer pnpm would install.
