@@ -58,7 +58,7 @@ catalog:
   # `effect` override). The range published packages declare is under
   # `catalogs.peers`.
   effect: 4.1.2
-  fallow: 3.40.0
+  fallow: 3.41.0
   # Lints each package's manifest and `exports` against what it publishes
   # (the `check:package` task).
   publint: ^0.3.25
