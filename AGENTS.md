@@ -63,7 +63,7 @@ Before you report work as done, run the gates below in order and quote each comm
 7. `pnpm audit --audit-level high` (network)
 8. `vp run test:coverage`, then `vp exec fallow audit --format json --quiet --explain --gate-marker agent --base origin/trunk` (the fallow gate below; not a CI step).
 
-Steps 2–7 are CI's `ci` job, in its order, on Node 22 and 24 ([ci.yml](.github/workflows/ci.yml)). Every workflow defaults to `permissions: {}`, pins each action to a commit SHA, checks out without persisted credentials (except the Release job, whose Changesets step pushes), and never runs the Release job for Dependabot; the `ci` workflow's advisory `changeset status` job only annotates; CI needs no secret, so Dependabot PRs run it safely. `uvx zizmor --offline .github` audits the workflows.
+Steps 2–7 are CI's `ci` job, in its order, on Node 22 and 24 ([ci.yml](.github/workflows/ci.yml)). Every workflow defaults to `permissions: {}`, locks each action to its commit in `.github/workflows/actions.lock` (exact release tags in `uses:`; regenerate it with `gh actions-lock` after changing a workflow, and the `Lockfile` workflow runs `gh actions-lock --verify`), checks out without persisted credentials (except the Release job, whose Changesets step pushes), and never runs the Release job for Dependabot; the `ci` workflow's advisory `changeset status` job only annotates; CI needs no secret, so Dependabot PRs run it safely. `uvx zizmor --offline .github` audits the workflows.
 
 ## Branches and pull requests
 

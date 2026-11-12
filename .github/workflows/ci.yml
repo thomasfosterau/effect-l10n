@@ -11,6 +11,7 @@ on:
     types: [opened, reopened, synchronize, ready_for_review]
   push:
     branches: [trunk]
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -33,14 +34,14 @@ jobs:
         # never `latest`; see the setup action).
         node-version: ["22", "24"]
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/setup
+      - uses: $/.github/actions/setup
         with:
           node-version: ${{ matrix.node-version }}
       - name: Restore the Vite+ task cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        uses: actions/cache@v6.1.0
         with:
           path: node_modules/.vite/task-cache
           key: vp-task-v1-${{ runner.os }}-node${{ matrix.node-version }}-${{ github.sha }}
@@ -74,12 +75,12 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           # `changeset status --since` diffs against the base branch.
           fetch-depth: 0
           persist-credentials: false
-      - uses: ./.github/actions/setup
+      - uses: $/.github/actions/setup
         with:
           node-version: "24"
       - name: Check for a changeset
