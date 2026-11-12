@@ -44,17 +44,17 @@ jobs:
         # The Changesets action pushes the version branch, so it needs the
         # checkout's git credentials (the ephemeral, job-scoped GITHUB_TOKEN).
         # zizmor: ignore[artipacked] -- the Changesets action pushes with these credentials.
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
       # Installs the pnpm version pinned by the package.json "packageManager"
       # field. Must run before setup-node so its pnpm cache can find the store.
       - name: Setup pnpm
-        uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+        uses: pnpm/action-setup@v6.1.1
 
       - name: Setup Node.js
-        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        uses: actions/setup-node@v7.1.0
         with:
           # A pinned major, never `latest`: setup-node resolves `latest` to the
           # first nodejs.org index entry, pre-releases included, which would
@@ -88,7 +88,7 @@ jobs:
       # v2 of the action pairs with Changesets CLI v3 and renamed v1's
       # `version` / `publish` / `commit` / `title` inputs.
       - name: Create release PR or publish to npm
-        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
+        uses: changesets/action@v2.1.2
         with:
           version-script: pnpm run version-packages
           publish-script: pnpm run release
