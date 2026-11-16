@@ -39,7 +39,7 @@ catalog:
   # failing `pnpm install` itself: read the `components` table in
   # node_modules/@effect/tsgo/dist/effect-tsgo.cjs before bumping any of the
   # three (toolchain group).
-  "@effect/tsgo": 0.67.5
+  "@effect/tsgo": 0.69.0
   # The Node `FileSystem` / `Path` layers the golden-file helper
   # (`@thomasfosterau/effect-l10n-testing`) runs on. The shared package rather than
   # @effect/platform-node, whose required `redis` peer pnpm would install.
@@ -78,7 +78,7 @@ catalog:
   # `pnpm exec vp migrate`, in the toolchain PR). `vitest` must match
   # vite-plus's exact pin because the `vitest@*: "catalog:"` override forces
   # every resolution to this singleton.
-  vite-plus: 1.5.0
+  vite-plus: 1.6.0
   vite: npm:@voidzero-dev/vite-plus-core@1.5.0
   vitest: 5.1.0
 
