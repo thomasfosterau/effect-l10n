@@ -43,6 +43,26 @@ jobs:
             vp-task-v1-${{ runner.os }}-${{ matrix.node-version }}-
       - run: vp run ci
 
+  # Not part of the required `ci` check.
+  devcontainer:
+    name: devcontainer
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      DEVCONTAINER_CLI: "@devcontainers/cli@0.89.0"
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: voidzero-dev/setup-vp@v1.22.0
+        with:
+          version-file: pnpm-workspace.yaml
+          run-install: false
+      - run: vp dlx "$DEVCONTAINER_CLI" up --workspace-folder .
+      - run: vp dlx "$DEVCONTAINER_CLI" exec --workspace-folder . vp --version
+
   # Advisory: warns when a PR changes a published package without a changeset.
   changeset:
     name: changeset status
