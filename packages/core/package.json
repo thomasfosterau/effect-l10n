@@ -31,7 +31,7 @@
   "files": [
     "dist",
     "README.md",
-    "LICENSE"
+    "LICENSE.md"
   ],
   "type": "module",
   "sideEffects": false,
@@ -52,18 +52,14 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {
-    "dev": "vp pack --watch"
-  },
   "devDependencies": {
     "@effect/language-service": "catalog:",
-    "@effect/vitest": "catalog:",
     "effect": "catalog:"
   },
   "peerDependencies": {
     "effect": "catalog:peers"
   },
   "engines": {
-    "node": ">=22.18.0"
+    "node": ">=22"
   }
 }

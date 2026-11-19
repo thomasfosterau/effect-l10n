@@ -2,53 +2,64 @@ import { recommended as effectTsgo } from "@effect/tsgo/oxlint-presets";
 import effect from "@enfect/oxlint";
 import { defineConfig } from "vite-plus";
 
-/**
- * What invalidates a cached task: Vite Task's automatic tracking of the files
- * a task reads, minus `node_modules`, plus the lockfile (a dependency bump
- * reruns the type check).
- */
+// Auto tracking minus node_modules churn, with the lockfile back so a
+// dependency upgrade still invalidates cached tasks.
 const cacheInputs = [{ auto: true }, "!node_modules/**", "!coverage/**", "pnpm-lock.yaml"];
 
 export default defineConfig({
-  // The gates are Vite Task tasks rather than package.json scripts, so they are
-  // cached and `vp run check` never collides with the built-in `vp check`.
-  // Each package's `check`, `build` and `test:unit` come from the shared
-  // vite.package.ts (instantiated by packages/*/vite.config.ts); the root
-  // `check` runs them first.
+  // Each package's `check`, `build`, `check:package` and `test:unit` come from
+  // vite.package.ts.
   run: {
     tasks: {
-      // The type gate: every package's `tsc`, then the root configs.
+      // Everything CI runs, in order. `vp run ci` locally is the same run.
+      ci: {
+        command:
+          "vp check && vp run check && vp run -r test:unit && vp run -r build && vp run -r check:package && pnpm audit --audit-level high",
+        cache: false,
+      },
+      // The type gate: every package's `tsc`, then the root configs. A new
+      // package adds its edge here.
       check: {
         command: "tsc --noEmit -p tsconfig.json",
-        // Every package's type gate; a new package adds its own edge here.
         dependsOn: [
           "@thomasfosterau/effect-l10n#check",
           "@thomasfosterau/effect-l10n-testing#check",
         ],
         cache: { input: cacheInputs, output: [] },
       },
-      // Uncached: it exists to write `coverage/coverage-final.json`, which the
-      // fallow PreToolUse gate reads and never refreshes.
+      // Writes coverage/coverage-final.json, which `fallow audit` reads.
       "test:coverage": {
         command: "vp test run --coverage",
         cache: false,
       },
+      fallow: {
+        command: "vp exec fallow --summary",
+        cache: false,
+      },
+      // Run by the pre-commit hook.
+      "fallow:audit": {
+        command: "vp exec fallow audit --base origin/trunk --quiet",
+        dependsOn: ["test:coverage"],
+        cache: false,
+      },
+      "changeset:version": {
+        command: "changeset version && vp fmt && pnpm install --lockfile-only",
+        cache: false,
+      },
+      "changeset:publish": {
+        command: "changeset publish",
+        dependsOn: ["@thomasfosterau/effect-l10n#build"],
+        cache: false,
+      },
     },
   },
-  // Format with fixes, lint without: with type-aware lint on, `vp check --fix`
-  // would silently apply type-aware autofixes (even of `warn` rules) to staged
-  // files at commit time, so the commit would differ from the tree that was
-  // verified. A commit staging only files the linter ignores must not fail.
+  // Format with fixes, lint without, so no unverified type-aware autofix lands
+  // at commit time.
   staged: {
     "*": ["vp check --fix --no-lint", "vp check --no-fmt --no-error-on-unmatched-pattern"],
   },
   test: {
-    // Every package is a Vitest project with its own vite.config.ts.
     projects: ["packages/*"],
-    // `vp run test:coverage` writes the Istanbul map `coverage/coverage-final.json`,
-    // which `fallow audit` reads for exact per-function CRAP scores
-    // (`health.coverage` in .fallowrc.json). Without it fallow scores every
-    // function as uncovered.
     coverage: {
       provider: "istanbul",
       reporter: ["text-summary", "json-summary", "json"],
@@ -58,19 +69,13 @@ export default defineConfig({
     },
   },
   lint: {
-    // `@effect/tsgo`'s preset (the language service's diagnostics as
-    // `effecttsgo/*` rules, through the patched oxlint) and `@enfect/oxlint`'s
-    // Effect rules.
     extends: [effectTsgo, effect.configs.recommended],
     plugins: ["eslint", "typescript", "unicorn", "oxc", "import", "promise", "vitest", "jsdoc"],
-    // Oxlint's own categories on top of the Effect preset: `correctness`
-    // (the default), plus `suspicious` and `perf`, at `error` like the preset.
     categories: {
       correctness: "error",
       suspicious: "error",
       perf: "error",
     },
-    // Vite+'s own plugin: `vitest` / `oxlint` imports go through `vite-plus`.
     jsPlugins: [{ name: "vite-plus", specifier: "vite-plus/oxlint-plugin" }],
     rules: {
       "vite-plus/prefer-vite-plus-imports": "error",
@@ -78,37 +83,27 @@ export default defineConfig({
       "eslint/no-underscore-dangle": ["error", { allow: ["_tag"] }],
       // `@since` / `@category` are Effect's doc-comment tags.
       "jsdoc/check-tag-names": ["error", { definedTags: ["since", "category"] }],
-      // `@effect/vitest`'s `it` (every Effect test case) is marked
-      // `@stability unstable`. The patched `tsc` still reports each use as a
-      // suggestion (tsconfig.base.json's `diagnosticSeverity`), so the lint
-      // copy would only repeat it as a warning on every test.
+      // `@effect/vitest`'s `it` is marked `@stability unstable`; the patched
+      // `tsc` already reports it as a suggestion.
       "effecttsgo/unstable-api-usage": "off",
       // Vitest's `expect(value, message)` takes a failure message as its
       // second argument; the rule's default of one argument is Jest's.
       "vitest/valid-expect": ["error", { maxArgs: 2 }],
     },
     overrides: [
-      // A package or subpath entry scaffolded ahead of its milestone
-      // (AGENTS.md#packages) holds only its module doc comment: there is
-      // nothing to export until the milestone starts, and inventing a
-      // placeholder export would ship API nobody designed.
+      // Entries scaffolded ahead of their milestone hold only a module doc
+      // comment until there is API to export.
       {
         files: ["packages/*/src/index.ts", "packages/*/src/*/index.ts"],
         rules: { "unicorn/no-empty-file": "off" },
       },
-      // The shared assertion helpers (`expectGoldenTree`) wrap `expect` and
-      // are only ever called from inside a test block in another package.
+      // Assertion helpers wrap `expect` and are called from inside test blocks.
       {
         files: ["packages/testing/src/**/*.ts"],
         rules: { "vitest/no-standalone-expect": "off" },
       },
     ],
     ignorePatterns: ["**/dist/**", "coverage/**"],
-    // Type-aware rules through oxlint-tsgolint (bundled with vite-plus, no
-    // separate install). tsgolint reads each file's nearest tsconfig.json
-    // (the package's, or the root one for this config). `typeCheck` also
-    // reports TypeScript errors in `vp check`; it overlaps the plain-`tsc`
-    // `vp run check` gate without conflicting.
     options: {
       typeAware: true,
       typeCheck: true,

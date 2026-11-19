@@ -1,10 +1,5 @@
 name: CI
 
-# Shaped like the sibling Effect libraries' CI (effect-web, effect-ext): the
-# gates run in one job per Node version, in the order AGENTS.md#verification
-# lists them. Nothing here needs a credential, so every PR class, Dependabot's
-# included, runs the whole gate safely.
-
 on:
   pull_request:
     branches: [trunk]
@@ -16,7 +11,6 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/trunk' }}
 
-# No permissions by default; each job grants only read access.
 permissions: {}
 
 jobs:
@@ -29,43 +23,27 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # The `engines.node` floor's major and the current LTS (pinned majors,
-        # never `latest`; see the setup action).
-        node-version: ["22", "24"]
+        node-version: [lts, latest]
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: ./.github/actions/setup
+      - uses: voidzero-dev/setup-vp@v1.22.0
         with:
+          version-file: pnpm-workspace.yaml
           node-version: ${{ matrix.node-version }}
+          cache: true
+          run-install: true
       - name: Restore the Vite+ task cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        uses: actions/cache@v6.1.0
         with:
           path: node_modules/.vite/task-cache
-          key: vp-task-v1-${{ runner.os }}-node${{ matrix.node-version }}-${{ github.sha }}
+          key: vp-task-v1-${{ runner.os }}-${{ matrix.node-version }}-${{ github.sha }}
           restore-keys: |
-            vp-task-v1-${{ runner.os }}-node${{ matrix.node-version }}-
-      - name: Format and lint (type-aware)
-        run: pnpm exec vp check
-      # The native TS7 `tsc`, patched with the Effect language service by the
-      # root `prepare` during the setup action's install, so Effect
-      # diagnostics fail CI like type errors do.
-      - name: Type gate
-        run: pnpm exec vp run check
-      - name: Unit tests
-        run: pnpm exec vp run -r test:unit
-      - name: Build
-        run: pnpm exec vp run -r build
-      # publint + attw over what each package would publish.
-      - name: Package lint
-        run: pnpm exec vp run -r check:package
-      - name: Audit
-        run: pnpm audit --audit-level high
+            vp-task-v1-${{ runner.os }}-${{ matrix.node-version }}-
+      - run: vp run ci
 
-  # Advisory, never required: a PR that changes a package without a
-  # changeset gets a warning annotation (AGENTS.md says which changes need
-  # one; private packages are outside Changesets until their first release).
+  # Advisory: warns when a PR changes a published package without a changeset.
   changeset:
     name: changeset status
     if: github.event_name == 'pull_request'
@@ -74,18 +52,19 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
-          # `changeset status --since` diffs against the base branch.
           fetch-depth: 0
           persist-credentials: false
-      - uses: ./.github/actions/setup
+      - uses: voidzero-dev/setup-vp@v1.22.0
         with:
-          node-version: "24"
+          version-file: pnpm-workspace.yaml
+          cache: true
+          run-install: true
       - name: Check for a changeset
         env:
           BASE_REF: ${{ github.base_ref }}
         run: |
-          if ! pnpm exec changeset status --since="origin/${BASE_REF}"; then
-            echo "::warning title=No changeset::This PR changes a published package without a changeset. Run \`pnpm changeset\` unless the change is docs-, CI- or tooling-only (AGENTS.md#branches-and-pull-requests)."
+          if ! vp exec changeset status --since="origin/${BASE_REF}"; then
+            echo "::warning title=No changeset::This PR changes a published package without a changeset (see docs/CONTRIBUTING.md)."
           fi
