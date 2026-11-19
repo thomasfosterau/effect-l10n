@@ -8,7 +8,7 @@ Every package is `"private": true` until it ships a public API, and Changesets s
 
 1. A PR with a changeset merges into `trunk`.
 2. The Release workflow ([release.yml](../.github/workflows/release.yml)) opens or updates the `chore: version packages` PR, which bumps versions and writes each `CHANGELOG.md`.
-3. Merging that PR runs the `publish` job, after approval on the `release` environment: it builds and runs `changeset publish` (`pnpm publish`, which rewrites `catalog:` / `workspace:` specifiers and does the OIDC exchange).
+3. Every release job waits for `verify-lockfile` (`gh actions-lock --verify`). Merging that PR runs the `publish` job, after approval on the `release` environment: it builds and runs `changeset publish` (`pnpm publish`, which rewrites `catalog:` / `workspace:` specifiers and does the OIDC exchange).
 
 The release jobs install with `--ignore-scripts`, use no shared cache, and set `pnpm_config_verify_deps_before_run: "false"`, so no dependency script runs in a privileged job.
 
