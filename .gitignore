@@ -150,3 +150,6 @@ vite.config.ts.timestamp-*
 node_modules
 dist
 .vitest/
+
+# Agent worktrees
+.claude/worktrees/

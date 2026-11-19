@@ -1,3 +1,3 @@
 # Changesets
 
-Run `pnpm changeset` to add a changeset describing your change.
+Run `vp exec changeset` to add a changeset describing your change.

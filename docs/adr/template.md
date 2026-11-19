@@ -2,7 +2,6 @@
 
 - **Status:** Proposed | Accepted | Superseded by [NNNN](NNNN-title.md)
 - **Date:** YYYY-MM-DD
-- **Issue:** #N
 
 ## Context
 

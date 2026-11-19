@@ -17,9 +17,9 @@
 
 | Entry                                       | Source                             | Role                                                               | Milestone |
 | ------------------------------------------- | ---------------------------------- | ------------------------------------------------------------------ | --------- |
-| `@thomasfosterau/effect-l10n/messageformat` | `packages/core/src/messageformat/` | MF2 data model, parser, validation, inference, reference formatter | M1 (#4)   |
-| `@thomasfosterau/effect-l10n`               | `packages/core/src/*.ts`           | Locales, `Message.make`, catalogs, translations, `defineConfig`    | M2 (#5)   |
-| `@thomasfosterau/effect-l10n/compiler`      | `packages/core/src/compiler/`      | Compiler service, `Target` interface, IR, lowering, diagnostics    | M3 (#6)   |
+| `@thomasfosterau/effect-l10n/messageformat` | `packages/core/src/messageformat/` | MF2 data model, parser, validation, inference, reference formatter | M1        |
+| `@thomasfosterau/effect-l10n`               | `packages/core/src/*.ts`           | Locales, `Message.make`, catalogs, translations, `defineConfig`    | M2        |
+| `@thomasfosterau/effect-l10n/compiler`      | `packages/core/src/compiler/`      | Compiler service, `Target` interface, IR, lowering, diagnostics    | M3        |
 
 The root entry's modules are the flat files directly under `src/` (Effect's own layout: one file per module); a layer that needs a directory of its own becomes another subpath.
 
@@ -36,9 +36,9 @@ The root entry's modules are the flat files directly under `src/` (Effect's own 
 | `@thomasfosterau/effect-l10n-vite`, `@thomasfosterau/effect-l10n-unplugin` | platform-specific, bundler dependencies                                               |
 | `@thomasfosterau/effect-l10n-testing` (private)                            | test-only dependencies (`@effect/platform-node-shared`, `vite-plus`); never published |
 
-Interchange (M7) and anything else not listed is decided by the same rule when its milestone starts: platform-neutral and dependency-free code joins the core package as a subpath (for example `./interchange`), and code that needs a dependency (an XML parser for XLIFF 2, a module loader for #31) or a platform layer (the Node layers of #36) is a separate package. A separate package sits above the core in the dependency direction and is its own boundary zone.
+Interchange (M7) and anything else not listed is decided by the same rule when its milestone starts: platform-neutral and dependency-free code joins the core package as a subpath (for example `./interchange`), and code that needs a dependency (an XML parser for XLIFF 2, a module loader for the TypeScript config) or a platform layer (the Node file-system layers) is a separate package. A separate package sits above the core in the dependency direction and is its own boundary zone.
 
-Everything else in ADR 0006 stands: the pnpm workspace, the package template in [AGENTS.md](../../AGENTS.md#packages), `effect` as a peer, `"private": true` until a first public API, a package created when its milestone starts, and the example projects as private workspace packages.
+Everything else in ADR 0006 stands: the pnpm workspace, the package template (now in [CONTRIBUTING.md](../CONTRIBUTING.md#adding-a-package)), `effect` as a peer, `"private": true` until a first public API, a package created when its milestone starts, and the example projects as private workspace packages.
 
 ## Consequences
 
