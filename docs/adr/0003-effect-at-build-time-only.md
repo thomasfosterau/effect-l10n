@@ -15,5 +15,5 @@ Effect gives the toolkit typed errors, services, layers and `Schema`, which suit
 ## Consequences
 
 - Library packages declare `effect` as a peer dependency (one copy per tree; AGENTS.md), never a dependency, and nothing they emit imports it.
-- The web target tests the emitted modules for size and tree-shaking (M4, [#42](https://github.com/thomasfosterau/effect-l10n/issues/42)) and with no Effect installed.
+- The web target tests the emitted modules for size and tree-shaking (M4) and with no Effect installed.
 - Formatting behaviour exists twice: the reference formatter in `@effect-l10n/messageformat` (Effect, for validation and tests) and the generated runtime (plain JS). Golden-file tests compare the two over the same fixtures.

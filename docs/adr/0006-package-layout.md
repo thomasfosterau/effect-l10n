@@ -27,11 +27,11 @@ One pnpm workspace, one npm package per role, all under the `@effect-l10n` scope
 
 Dependencies point one way: `messageformat` ← `core` ← `compiler` ← targets / `interchange` ← `cli` / bundler plugins. `.fallowrc.json` encodes this as boundary zones, so an import against the arrow fails `fallow`.
 
-Every package follows the template in [AGENTS.md](../../AGENTS.md#packages): `src/index.ts` as its entry, a `vite.config.ts` that instantiates the shared `vite.package.ts`, `effect` as a peer, and `"private": true` until it ships its first public API. A package is created when its milestone starts; `messageformat`, `core`, `compiler` and `testing` exist from M0. Example projects (`examples/web`, `examples/ios`, `examples/android`) join the workspace as private packages with the targets that need them.
+Every package follows the template (now in [CONTRIBUTING.md](../CONTRIBUTING.md#adding-a-package)): `src/index.ts` as its entry, a `vite.config.ts` that instantiates the shared `vite.package.ts`, `effect` as a peer, and `"private": true` until it ships its first public API. A package is created when its milestone starts; `messageformat`, `core`, `compiler` and `testing` exist from M0. Example projects (`examples/web`, `examples/ios`, `examples/android`) join the workspace as private packages with the targets that need them.
 
 ## Consequences
 
 - A web application depends on `target-web`'s output, not on the compiler: none of the build-time packages reach its bundle.
 - Each target is versioned and installed on its own; Changesets releases only the packages that changed.
 - Adding a package means a row here and in AGENTS.md, its zone in `.fallowrc.json`, and its `check` edge on the root `check` task.
-- The `@effect-l10n` npm scope must be owned before the first publish (an owner action; see [PUBLISHING.md](../../PUBLISHING.md)).
+- The `@effect-l10n` npm scope must be owned before the first publish (an owner action; see [PUBLISHING.md](../PUBLISHING.md)).

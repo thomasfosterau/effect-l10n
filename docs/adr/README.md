@@ -1,6 +1,6 @@
 # Architecture decision records
 
-Each record states one decision: the context that forced it, the decision, and its consequences. They record the decisions agreed while planning the roadmap ([#2](https://github.com/thomasfosterau/effect-l10n/issues/2)); an issue comment or a newer ADR that supersedes one says so, and the old record is marked **Superseded** rather than deleted.
+Each record states one decision: the context that forced it, the decision, and its consequences. They record the decisions agreed while planning the roadmap; a newer ADR that supersedes one says so, and the old record is marked **Superseded** rather than deleted.
 
 | ADR                                       | Decision                                                        | Status                                                    |
 | ----------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------- |

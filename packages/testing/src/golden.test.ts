@@ -18,9 +18,8 @@ const MessagesFile = Schema.fromJsonString(Messages, { space: 2 });
 const byId = Order.mapInput(Str.Order, ([id]: readonly [string, string]) => id);
 
 /**
- * A stand-in for a real target (M3's `Target` interface, #32): one
- * `<locale>/messages.json` per locale, its messages sorted by ID so the
- * output is deterministic.
+ * A stand-in for a real target: one `<locale>/messages.json` per locale, its
+ * messages sorted by ID so the output is deterministic.
  */
 const stubTarget = (catalog: Readonly<Record<string, Messages>>): FileTree =>
   R.fromEntries(
@@ -46,8 +45,7 @@ it.layer(layer)("golden-file trees", (withFiles) => {
   );
 });
 
-// The property-test pattern the MF2 parser's round-trip tests follow (M1):
-// whatever a target emits for a locale reads back as the same messages.
+// Whatever a target emits for a locale reads back as the same messages.
 it.prop("the stub target's files round-trip", [Messages], ([messages]) => {
   const file = stubTarget({ en: messages })["en/messages.json"];
   assert.isDefined(file);
