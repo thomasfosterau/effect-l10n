@@ -16,14 +16,14 @@ catalog:
   # and oxlint / oxlint-tsgolint versions in its `components` table
   # (node_modules/@effect/tsgo/dist/effect-tsgo.cjs) and fails `vp install`
   # on any other: bump it with them.
-  "@effect/tsgo": 0.67.5
+  "@effect/tsgo": 0.70.0
   # Node layers for the testing package, without @effect/platform-node's
   # `redis` peer.
   "@effect/platform-node-shared": 4.1.4
   "@effect/vitest": 4.1.4
   "@enfect/oxlint": ^0.10.0
   # Must equal the vitest vite-plus pins.
-  "@vitest/coverage-istanbul": 5.1.0
+  "@vitest/coverage-istanbul": 5.1.1
   # The singleton the workspace builds against; published ranges are in
   # `catalogs.peers`.
   effect: 4.1.4
@@ -36,9 +36,9 @@ catalog:
   "@typescript/native": "npm:typescript@7.0.2"
   # `vite` and `vitest` must equal what this vite-plus pins; `vp migrate`
   # re-pins them.
-  vite-plus: 1.5.0
+  vite-plus: 1.7.0
   vite: npm:@voidzero-dev/vite-plus-core@1.5.0
-  vitest: 5.1.0
+  vitest: 5.1.1
 
 # Peer ranges published packages declare. Raising a floor is a breaking change;
 # raise it only when a dependency requires it, naming that dependency.
