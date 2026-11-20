@@ -46,4 +46,4 @@ Run `vp run ci` (or `vp check`, `vp run check`, `vp run -r test:unit`, `vp run -
 
 ## Changesets
 
-Every change to a published package's behaviour or its `.d.ts` (doc comments included, as a `patch`) needs a changeset: `vp exec changeset`. Docs-, CI- and tooling-only changes need none, and neither does a package that is still `private`. Never version or publish by hand: see [PUBLISHING.md](PUBLISHING.md).
+Every change to a published package's behaviour or its `.d.ts` (doc comments included, as a `patch`) needs a changeset: `vp exec changeset`. Docs-, CI- and tooling-only changes need none, and neither does a package that is still `private`. Never version or publish by hand: the Release workflow runs `vp run release` (`vp run release:dry-run` shows what it would publish); see [PUBLISHING.md](PUBLISHING.md).

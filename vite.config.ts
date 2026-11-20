@@ -43,12 +43,28 @@ export default defineConfig({
         cache: false,
       },
       "changeset:version": {
-        command: "changeset version && vp fmt && pnpm install --lockfile-only",
+        command: "changeset version && vp fmt && vp install --lockfile-only",
         cache: false,
       },
-      "changeset:publish": {
-        command: "changeset publish",
-        dependsOn: ["@thomasfosterau/effect-l10n#build"],
+      // The release job's publish script (.github/workflows/release.yml), after
+      // the build and `check:package` on the same commit: pnpm publishes every
+      // public package whose version is not on npm yet, in dependency order,
+      // under OIDC trusted publishing; then `changeset git-tag` tags each
+      // version not tagged yet and reports the new tags to `changesets/action`
+      // through `CHANGESETS_OUTPUT`, which pushes them and creates the GitHub
+      // releases. Every package is private today, so both publish nothing.
+      release: {
+        command: [
+          "vp pm publish -r --access public --no-git-checks -- --ignore-scripts",
+          "changeset git-tag",
+        ],
+        dependsOn: ["@thomasfosterau/effect-l10n#check:package"],
+        cache: false,
+      },
+      // What `release` would publish, without publishing or tagging.
+      "release:dry-run": {
+        command: "vp pm publish -r --access public --dry-run --no-git-checks -- --ignore-scripts",
+        dependsOn: ["@thomasfosterau/effect-l10n#check:package"],
         cache: false,
       },
     },

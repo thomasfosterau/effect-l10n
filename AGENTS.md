@@ -15,6 +15,7 @@ Read [README.md](README.md) and [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) fir
 - **TypeScript 6 and 7 side by side.** `typescript` is TS6 (bin `tsc6`) for JS-API consumers; `@typescript/native` is TS7 (bin `tsc`), which the `check` tasks run.
 - **`dist/` is the product.** Siblings resolve each other through `exports`, i.e. `dist/`; go through `vp run`, whose tasks build dependencies first.
 - **`sideEffects: false`**: no top-level statements with effects in `src/`.
+- **Publish only through the Release workflow** (`vp run release`; there is no publish script). Release-path registry calls go through `vp pm`, never `npm` / `pnpm` directly; `vp pm view` fails inside this repo (`devEngines.runtime` is `lts`), so rely on `vp pm publish -r` skipping published and private packages.
 
 ## Fallow
 
