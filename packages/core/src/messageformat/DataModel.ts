@@ -49,8 +49,9 @@ export const Identifier = Schema.String.check(
  */
 export type Identifier = typeof Identifier.Type;
 
-// Any well-formed string without U+0000, which MF2 syntax cannot represent.
-const Characters = Schema.String.check(Schema.isPattern(/^[^\0\p{Cs}]*$/u));
+// Text and literals may hold any code unit but U+0000, which MF2 syntax
+// cannot represent; unpaired surrogates are allowed, as in the spec.
+const Characters = Schema.String.check(Schema.isPattern(/^[^\0]*$/));
 
 /**
  * Where a node came from in the source: UTF-16 code unit offsets, `start`

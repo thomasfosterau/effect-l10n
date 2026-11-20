@@ -107,6 +107,18 @@ describe("the spec's JSON data model", () => {
     assert.deepStrictEqual(encode(decode(json)), json);
   });
 
+  it("keeps unpaired surrogates in text and literals, as the spec allows", () => {
+    const json = {
+      type: "message",
+      declarations: [],
+      pattern: [
+        "\uD800",
+        { type: "expression", arg: { type: "literal", value: "\uDC00" }, attributes: {} },
+      ],
+    };
+    assert.deepStrictEqual(encode(decode(json)), json);
+  });
+
   it("tells the three expression shapes apart by their operand", () => {
     const message = decode({
       type: "message",
