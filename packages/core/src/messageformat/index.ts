@@ -15,6 +15,11 @@ export * as DataModel from "./DataModel";
 /**
  * @since 0.1.0
  */
+export * as Formatter from "./Formatter";
+
+/**
+ * @since 0.1.0
+ */
 export * as FunctionRegistry from "./FunctionRegistry";
 
 /**

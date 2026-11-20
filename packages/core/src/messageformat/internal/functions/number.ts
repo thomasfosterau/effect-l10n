@@ -210,14 +210,15 @@ export const offset = MessageFunction.make({
   name: "offset",
   operand: Numeric,
   options: { add: DigitSize, subtract: DigitSize },
-  resolve: ({ context, operand, argument, options }) => {
+  resolve: ({ context, operand, argument, options, rejected }) => {
     const deltas = Arr.getSomes([
       Option.fromUndefinedOr(options.add),
       Option.map(Option.fromUndefinedOr(options.subtract), (amount: DigitSize) => -amount),
     ]);
     const [delta] = deltas;
     if (delta === undefined || deltas.length > 1) {
-      return Result.fail(new BadOption({ function: "offset", option: "add" }));
+      const [option = "add"] = rejected;
+      return Result.fail(new BadOption({ function: "offset", option }));
     }
     const inherited = Option.getOrUndefined(argument)?.options ?? {};
     const integral = Option.getOrUndefined(argument)?.type === "integer";

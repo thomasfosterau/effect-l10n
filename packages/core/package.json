@@ -48,6 +48,10 @@
       "types": "./dist/messageformat/DataModel.d.ts",
       "default": "./dist/messageformat/DataModel.js"
     },
+    "./messageformat/Formatter": {
+      "types": "./dist/messageformat/Formatter.d.ts",
+      "default": "./dist/messageformat/Formatter.js"
+    },
     "./messageformat/FunctionRegistry": {
       "types": "./dist/messageformat/FunctionRegistry.d.ts",
       "default": "./dist/messageformat/FunctionRegistry.js"

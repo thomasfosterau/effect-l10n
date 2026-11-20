@@ -69,7 +69,7 @@ const memoize = <O extends object, A>(
  * @category context
  * @since 0.1.0
  */
-export const makeIntlCache = (): IntlCache => ({
+export const newIntlCache = (): IntlCache => ({
   numberFormat: memoize((locale, options) => new Intl.NumberFormat(locale, options)),
   pluralRules: memoize((locale, options) => new Intl.PluralRules(locale, options)),
   dateTimeFormat: memoize((locale, options) => new Intl.DateTimeFormat(locale, options)),
