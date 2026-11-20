@@ -44,6 +44,10 @@
       "types": "./dist/messageformat/index.d.ts",
       "default": "./dist/messageformat/index.js"
     },
+    "./messageformat/DataModel": {
+      "types": "./dist/messageformat/DataModel.d.ts",
+      "default": "./dist/messageformat/DataModel.js"
+    },
     "./compiler": {
       "types": "./dist/compiler/index.d.ts",
       "default": "./dist/compiler/index.js"
@@ -54,7 +58,9 @@
   },
   "devDependencies": {
     "@effect/language-service": "catalog:",
-    "effect": "catalog:"
+    "@effect/vitest": "catalog:",
+    "effect": "catalog:",
+    "vite-plus": "catalog:"
   },
   "peerDependencies": {
     "effect": "catalog:peers"
