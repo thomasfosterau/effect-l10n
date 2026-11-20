@@ -176,6 +176,96 @@ export class UnreachableVariant extends Schema.TaggedError<
 }
 
 /**
+ * `bad-operand`: a function can't use its operand's value or type.
+ *
+ * @category function errors
+ * @since 0.1.0
+ */
+export class BadOperand extends Schema.TaggedError<BadOperand, { readonly brand: unique symbol }>()(
+  "BadOperand",
+  { span: at, function: Schema.String },
+) {
+  /** The spec's name for this error. */
+  readonly code = "bad-operand";
+  override get message(): string {
+    return `:${this.function} can't use its operand`;
+  }
+}
+
+/**
+ * `bad-option`: a function can't use an option's value, or the option had
+ * to be set by a literal.
+ *
+ * @category function errors
+ * @since 0.1.0
+ */
+export class BadOption extends Schema.TaggedError<BadOption, { readonly brand: unique symbol }>()(
+  "BadOption",
+  { span: at, function: Schema.String, option: Schema.String },
+) {
+  /** The spec's name for this error. */
+  readonly code = "bad-option";
+  override get message(): string {
+    return `:${this.function} can't use option ${this.option}`;
+  }
+}
+
+/**
+ * `bad-variant-key`: a selector can't compare against a key, such as a
+ * `:number` key that is neither a number nor a plural category.
+ *
+ * @category function errors
+ * @since 0.1.0
+ */
+export class BadVariantKey extends Schema.TaggedError<
+  BadVariantKey,
+  { readonly brand: unique symbol }
+>()("BadVariantKey", { span: at, function: Schema.String, key: Schema.String }) {
+  /** The spec's name for this error. */
+  readonly code = "bad-variant-key";
+  override get message(): string {
+    return `:${this.function} can't select on key ${this.key}`;
+  }
+}
+
+/**
+ * `unsupported-operation`: a function accepts the request but this
+ * implementation can't carry it out.
+ *
+ * @category function errors
+ * @since 0.1.0
+ */
+export class UnsupportedOperation extends Schema.TaggedError<
+  UnsupportedOperation,
+  { readonly brand: unique symbol }
+>()("UnsupportedOperation", { span: at, function: Schema.String, operation: Schema.String }) {
+  /** The spec's name for this error. */
+  readonly code = "unsupported-operation";
+  override get message(): string {
+    return `:${this.function} doesn't support ${this.operation}`;
+  }
+}
+
+/**
+ * An error a function handler reports: the spec's _Message Function Errors_.
+ *
+ * @category function errors
+ * @since 0.1.0
+ */
+export const FunctionError = Schema.Union([
+  BadOperand,
+  BadOption,
+  BadVariantKey,
+  UnsupportedOperation,
+]);
+
+/**
+ * @category function errors
+ * @since 0.1.0
+ */
+export type FunctionError = typeof FunctionError.Type;
+
+/**
  * Why a message was rejected or flagged.
  *
  * @category reasons
@@ -191,6 +281,10 @@ export const Reason = Schema.Union([
   DuplicateVariant,
   UnusedLocal,
   UnreachableVariant,
+  BadOperand,
+  BadOption,
+  BadVariantKey,
+  UnsupportedOperation,
 ]);
 
 /**

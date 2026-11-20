@@ -15,7 +15,22 @@ export * as DataModel from "./DataModel";
 /**
  * @since 0.1.0
  */
+export * as FunctionRegistry from "./FunctionRegistry";
+
+/**
+ * @since 0.1.0
+ */
 export * as MessageFormatError from "./MessageFormatError";
+
+/**
+ * @since 0.1.0
+ */
+export * as MessageFunction from "./MessageFunction";
+
+/**
+ * @since 0.1.0
+ */
+export * as MessageValue from "./MessageValue";
 
 /**
  * @since 0.1.0
