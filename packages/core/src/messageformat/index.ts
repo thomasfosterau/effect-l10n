@@ -40,6 +40,11 @@ export * as MessageValue from "./MessageValue";
 /**
  * @since 0.1.0
  */
+export * as Params from "./Params";
+
+/**
+ * @since 0.1.0
+ */
 export * as Parser from "./Parser";
 
 /**

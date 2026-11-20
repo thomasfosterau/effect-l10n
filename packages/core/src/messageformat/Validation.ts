@@ -9,11 +9,11 @@ import * as Arr from "effect/Array";
 import * as Effect from "effect/Effect";
 import * as HashSet from "effect/HashSet";
 import * as Option from "effect/Option";
-import * as P from "effect/Predicate";
 import * as R from "effect/Record";
 import * as Result from "effect/Result";
 import * as Schema from "effect/Schema";
 import * as DataModel from "./DataModel";
+import { placeholders } from "./internal/patterns";
 import {
   DuplicateDeclaration,
   DuplicateVariant,
@@ -73,9 +73,6 @@ const variablesIn = (node: DataModel.Expression | DataModel.Markup): Array<strin
   );
 };
 
-const patternsOf = (message: DataModel.Message): ReadonlyArray<DataModel.Pattern> =>
-  message.type === "message" ? [message.pattern] : Arr.map(message.variants, (v) => v.value);
-
 /** Every variable the message reads, outside each declaration's own name. */
 const usedVariables = (message: DataModel.Message): HashSet.HashSet<string> =>
   HashSet.fromIterable([
@@ -85,9 +82,7 @@ const usedVariables = (message: DataModel.Message): HashSet.HashSet<string> =>
         : variablesIn(declaration.value),
     ),
     ...(message.type === "select" ? Arr.map(message.selectors, (s) => s.name) : []),
-    ...Arr.flatMap(patternsOf(message), (pattern) =>
-      Arr.flatMap(pattern, (part) => (P.isString(part) ? [] : variablesIn(part))),
-    ),
+    ...Arr.flatMap(placeholders(message), variablesIn),
   ]);
 
 /**

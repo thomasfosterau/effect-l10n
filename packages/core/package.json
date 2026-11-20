@@ -68,6 +68,10 @@
       "types": "./dist/messageformat/MessageValue.d.ts",
       "default": "./dist/messageformat/MessageValue.js"
     },
+    "./messageformat/Params": {
+      "types": "./dist/messageformat/Params.d.ts",
+      "default": "./dist/messageformat/Params.js"
+    },
     "./messageformat/Parser": {
       "types": "./dist/messageformat/Parser.d.ts",
       "default": "./dist/messageformat/Parser.js"
