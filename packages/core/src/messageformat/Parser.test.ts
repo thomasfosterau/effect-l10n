@@ -226,7 +226,7 @@ describe("errors", () => {
     assert.isTrue(Result.isFailure(result));
     if (Result.isFailure(result)) {
       assert.strictEqual(result.failure.reason._tag, "InvalidSyntax");
-      assert.strictEqual(result.failure.reason.span.start, 11);
+      assert.strictEqual(result.failure.reason.span?.start, 11);
     }
   });
 
@@ -236,7 +236,7 @@ describe("errors", () => {
     if (Result.isFailure(result)) {
       assert.strictEqual(result.failure.reason._tag, "DuplicateOptionName");
       assert.deepStrictEqual(
-        [result.failure.reason.span.start, result.failure.reason.span.end],
+        [result.failure.reason.span?.start, result.failure.reason.span?.end],
         [8, 11],
       );
     }

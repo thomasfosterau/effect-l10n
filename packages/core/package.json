@@ -60,6 +60,10 @@
       "types": "./dist/messageformat/Serializer.d.ts",
       "default": "./dist/messageformat/Serializer.js"
     },
+    "./messageformat/Validation": {
+      "types": "./dist/messageformat/Validation.d.ts",
+      "default": "./dist/messageformat/Validation.js"
+    },
     "./compiler": {
       "types": "./dist/compiler/index.d.ts",
       "default": "./dist/compiler/index.js"
