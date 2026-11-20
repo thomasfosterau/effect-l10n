@@ -15,3 +15,7 @@ Read [README.md](README.md) and [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) fir
 - **TypeScript 6 and 7 side by side.** `typescript` is TS6 (bin `tsc6`) for JS-API consumers; `@typescript/native` is TS7 (bin `tsc`), which the `check` tasks run.
 - **`dist/` is the product.** Siblings resolve each other through `exports`, i.e. `dist/`; go through `vp run`, whose tasks build dependencies first.
 - **`sideEffects: false`**: no top-level statements with effects in `src/`.
+
+## Fallow
+
+- `vp install` links the `fallow` skill into `.claude/skills/fallow` from the installed package (approved under `permissions` in `pnpm-workspace.yaml`). The pre-commit `fallow:audit` gate and the rest of the repository's rules are in [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md).
