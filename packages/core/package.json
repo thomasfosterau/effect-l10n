@@ -56,6 +56,10 @@
       "types": "./dist/messageformat/Parser.d.ts",
       "default": "./dist/messageformat/Parser.js"
     },
+    "./messageformat/Serializer": {
+      "types": "./dist/messageformat/Serializer.d.ts",
+      "default": "./dist/messageformat/Serializer.js"
+    },
     "./compiler": {
       "types": "./dist/compiler/index.d.ts",
       "default": "./dist/compiler/index.js"
