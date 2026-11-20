@@ -186,6 +186,22 @@ describe("the spec's JSON data model", () => {
       { type: "message", pattern: [{ type: "markup", kind: "self", name: "b" }] },
     ],
     ["an unknown message type", { type: "messages", pattern: [] }],
+    [
+      "a matcher with no selectors",
+      { type: "select", selectors: [], variants: [{ keys: [{ type: "*" }], value: [] }] },
+    ],
+    [
+      "a matcher with no variants",
+      { type: "select", selectors: [{ type: "variable", name: "x" }], variants: [] },
+    ],
+    [
+      "a variant with no keys",
+      {
+        type: "select",
+        selectors: [{ type: "variable", name: "x" }],
+        variants: [{ keys: [], value: [] }],
+      },
+    ],
   ])("rejects %s", (_, json) => {
     assert.isTrue(Result.isFailure(decodeResult(json)));
   });

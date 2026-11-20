@@ -454,7 +454,7 @@ export type Key = typeof Key.Type;
  */
 export class Variant extends Schema.Class<Variant, { readonly brand: unique symbol }>(
   "@thomasfosterau/effect-l10n/messageformat/Variant",
-)({ keys: Schema.Array(Key), value: Pattern, span }) {
+)({ keys: Schema.NonEmptyArray(Key), value: Pattern, span }) {
   [Eq.symbol](that: Eq.Equal): boolean {
     return that instanceof Variant && Eq.equals(withoutSpan(this), withoutSpan(that));
   }
@@ -486,7 +486,9 @@ export class PatternMessage extends Schema.Class<PatternMessage, { readonly bran
 }
 
 /**
- * A message that selects one of its variants by its selectors' values.
+ * A message that selects one of its variants by its selectors' values. As in
+ * the syntax, it has at least one selector and one variant, and every variant
+ * at least one key.
  *
  * @category messages
  * @since 0.1.0
@@ -496,8 +498,8 @@ export class SelectMessage extends Schema.Class<SelectMessage, { readonly brand:
 )({
   type: Schema.tag("select"),
   declarations: declarationsField,
-  selectors: Schema.Array(VariableRef),
-  variants: Schema.Array(Variant),
+  selectors: Schema.NonEmptyArray(VariableRef),
+  variants: Schema.NonEmptyArray(Variant),
   span,
 }) {
   [Eq.symbol](that: Eq.Equal): boolean {
