@@ -441,6 +441,7 @@ const parseVariant = (cursor: Cursor): Parsed<DataModel.Variant> => {
     if (cursor.peekUnit() === OPEN) break;
     if (!spaced) return cursor.fail("whitespace between keys");
   }
+  if (!Arr.isArrayNonEmpty(keys)) return cursor.fail("a key");
   const value = parseQuotedPattern(cursor);
   if (Result.isFailure(value)) return propagate(value);
   return Result.succeed(
@@ -463,7 +464,7 @@ const parseMatcher = (
     selectors.push(selector.success);
     spaced = cursor.skipOptional();
   }
-  if (Arr.isReadonlyArrayEmpty(selectors)) return cursor.fail("a selector, as in `$count`");
+  if (!Arr.isArrayNonEmpty(selectors)) return cursor.fail("a selector, as in `$count`");
   if (!spaced) return cursor.fail("whitespace before the first variant");
   const variants: Array<DataModel.Variant> = [];
   while (!cursor.done) {
@@ -472,7 +473,7 @@ const parseMatcher = (
     variants.push(variant.success);
     cursor.skipOptional();
   }
-  if (Arr.isReadonlyArrayEmpty(variants)) return cursor.fail("a variant");
+  if (!Arr.isArrayNonEmpty(variants)) return cursor.fail("a variant");
   return Result.succeed(
     new DataModel.SelectMessage({ declarations, selectors, variants, span: cursor.span(start) }),
   );
