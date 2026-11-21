@@ -13,10 +13,10 @@ catalog:
   # @effect/tsgo.
   "@effect/language-service": ^0.87.5
   # `effect-tsgo patch` (the root `prepare`) supports only the `@typescript/native`
-  # and oxlint / oxlint-tsgolint versions in its `components` table
-  # (node_modules/@effect/tsgo/dist/effect-tsgo.cjs) and fails `vp install`
-  # on any other: bump it with them.
-  "@effect/tsgo": 0.67.5
+  # and the oxlint / tsrs versions vite-plus bundles (its README's supported
+  # versions table) and fails `vp install` on any other: bump it with them.
+  # From vite-plus 1.7, type-aware lint runs on tsrs, not oxlint-tsgolint.
+  "@effect/tsgo": 0.73.2
   # Node layers for the testing package, without @effect/platform-node's
   # `redis` peer.
   "@effect/platform-node-shared": 4.1.4
@@ -36,8 +36,8 @@ catalog:
   "@typescript/native": "npm:typescript@7.0.2"
   # `vite` and `vitest` must equal what this vite-plus pins; `vp migrate`
   # re-pins them.
-  vite-plus: 1.5.0
-  vite: npm:@voidzero-dev/vite-plus-core@1.5.0
+  vite-plus: 1.7.0
+  vite: npm:@voidzero-dev/vite-plus-core@8.3.8000
   vitest: 5.1.0
 
 # Peer ranges published packages declare. Raising a floor is a breaking change;
@@ -74,10 +74,8 @@ skills:
 
 peerDependencyRules:
   allowAny:
-    - vite
     - vitest
   allowedVersions:
-    vite: "*"
     vitest: "*"
 
 # Hold new releases for 24 hours; Dependabot's cooldown matches it.
