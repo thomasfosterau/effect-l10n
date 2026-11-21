@@ -48,9 +48,21 @@
       "types": "./dist/messageformat/DataModel.d.ts",
       "default": "./dist/messageformat/DataModel.js"
     },
+    "./messageformat/FunctionRegistry": {
+      "types": "./dist/messageformat/FunctionRegistry.d.ts",
+      "default": "./dist/messageformat/FunctionRegistry.js"
+    },
     "./messageformat/MessageFormatError": {
       "types": "./dist/messageformat/MessageFormatError.d.ts",
       "default": "./dist/messageformat/MessageFormatError.js"
+    },
+    "./messageformat/MessageFunction": {
+      "types": "./dist/messageformat/MessageFunction.d.ts",
+      "default": "./dist/messageformat/MessageFunction.js"
+    },
+    "./messageformat/MessageValue": {
+      "types": "./dist/messageformat/MessageValue.d.ts",
+      "default": "./dist/messageformat/MessageValue.js"
     },
     "./messageformat/Parser": {
       "types": "./dist/messageformat/Parser.d.ts",

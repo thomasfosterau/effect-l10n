@@ -13,5 +13,11 @@ Every problem the MessageFormat 2 engine reports is a `MessageFormatError` whose
 | `duplicate-variant`           | `DuplicateVariant`          | error    | validation  | Two variants have the same keys (literal keys compared after NFC normalization).                   |
 | `unused-local`                | `UnusedLocal`               | warning  | validation  | A `.local` variable is never used.                                                                 |
 | `unreachable-variant`         | `UnreachableVariant`        | warning  | validation  | A `:number` / `:integer` selector can never produce this key in the given locale (needs `locale`). |
+| `bad-operand`                 | `BadOperand`                | error    | function    | A function can't use its operand's value or type; the expression falls back.                       |
+| `bad-option`                  | `BadOption`                 | error    | function    | A function can't use an option's value, or a variable set an option that needs a literal.          |
+| `bad-variant-key`             | `BadVariantKey`             | error    | function    | A selector can't compare against a key, such as a `:number` key that's no number or category.      |
+| `unsupported-operation`       | `UnsupportedOperation`      | error    | function    | A function accepts the request but can't carry it out, such as `:unit` with `usage`.               |
+
+Function errors (`FunctionError`) come from a function handler while a message is formatted, alongside the output rather than instead of it. A `bad-option` usually leaves out just that option and a `bad-variant-key` just that key, while `bad-operand` and `unsupported-operation` make the expression fall back.
 
 The parser reports `duplicate-option-name` because the data model's options are a record, which can't hold a duplicate. A variable declared twice is always `duplicate-declaration`, so there's no separate shadowing warning.
