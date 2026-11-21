@@ -346,18 +346,24 @@ describe(":string", () => {
   });
 });
 
+// ICU versions differ on whether a narrow no-break space precedes "PM".
+const spaced = (text: string) => text.replaceAll("\u202f", " ");
+
 describe("date and time", () => {
   const instant = "2006-01-02T15:04:06";
 
   it("formats date/time literals in floating time", () => {
-    assert.strictEqual(format(apply("datetime", instant)), "Jan 2, 2006, 3:04\u202fPM");
+    assert.strictEqual(spaced(format(apply("datetime", instant))), "Jan 2, 2006, 3:04 PM");
     assert.strictEqual(
-      format(apply("datetime", instant, { dateLength: "long", timePrecision: "second" })),
-      "January 2, 2006 at 3:04:06\u202fPM",
+      spaced(format(apply("datetime", instant, { dateLength: "long", timePrecision: "second" }))),
+      "January 2, 2006 at 3:04:06 PM",
     );
     assert.strictEqual(format(apply("date", "2006-01-02", { length: "long" })), "January 2, 2006");
     assert.strictEqual(format(apply("date", instant, { length: "short" })), "1/2/2006");
-    assert.strictEqual(format(apply("time", instant, { precision: "second" })), "3:04:06\u202fPM");
+    assert.strictEqual(
+      spaced(format(apply("time", instant, { precision: "second" }))),
+      "3:04:06 PM",
+    );
   });
 
   it("applies override options", () => {
