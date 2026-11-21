@@ -1,0 +1,7 @@
+{
+  "locale": "pl",
+  "messages": {
+    "greeting": "Cześć, {$user}!",
+    "items": ".input {$count :integer} .match $count one {{Jeden}} * {{{$count}}}"
+  }
+}

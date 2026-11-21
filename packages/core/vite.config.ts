@@ -2,6 +2,14 @@ import { packageConfig } from "../../vite.package";
 
 export default packageConfig({
   index: "src/index.ts",
+  Catalog: "src/Catalog.ts",
+  Config: "src/Config.ts",
+  Diagnostic: "src/Diagnostic.ts",
+  Locale: "src/Locale.ts",
+  Message: "src/Message.ts",
+  ModuleLoader: "src/ModuleLoader.ts",
+  Project: "src/Project.ts",
+  Translation: "src/Translation.ts",
   "messageformat/index": "src/messageformat/index.ts",
   "messageformat/DataModel": "src/messageformat/DataModel.ts",
   "messageformat/Formatter": "src/messageformat/Formatter.ts",

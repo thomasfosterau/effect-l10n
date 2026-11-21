@@ -40,6 +40,38 @@
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./Catalog": {
+      "types": "./dist/Catalog.d.ts",
+      "default": "./dist/Catalog.js"
+    },
+    "./Config": {
+      "types": "./dist/Config.d.ts",
+      "default": "./dist/Config.js"
+    },
+    "./Diagnostic": {
+      "types": "./dist/Diagnostic.d.ts",
+      "default": "./dist/Diagnostic.js"
+    },
+    "./Locale": {
+      "types": "./dist/Locale.d.ts",
+      "default": "./dist/Locale.js"
+    },
+    "./Message": {
+      "types": "./dist/Message.d.ts",
+      "default": "./dist/Message.js"
+    },
+    "./ModuleLoader": {
+      "types": "./dist/ModuleLoader.d.ts",
+      "default": "./dist/ModuleLoader.js"
+    },
+    "./Project": {
+      "types": "./dist/Project.d.ts",
+      "default": "./dist/Project.js"
+    },
+    "./Translation": {
+      "types": "./dist/Translation.d.ts",
+      "default": "./dist/Translation.js"
+    },
     "./messageformat": {
       "types": "./dist/messageformat/index.d.ts",
       "default": "./dist/messageformat/index.js"
@@ -94,6 +126,7 @@
   },
   "devDependencies": {
     "@effect/language-service": "catalog:",
+    "@effect/platform-node-shared": "catalog:",
     "@effect/vitest": "catalog:",
     "effect": "catalog:",
     "vite-plus": "catalog:"
