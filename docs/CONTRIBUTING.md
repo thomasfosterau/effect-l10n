@@ -5,7 +5,7 @@
 - Branch off `trunk` and open a pull request into `trunk`; never commit to `trunk` directly. Open a draft PR as soon as you start, and keep one PR per change, however large. Squash-merge with a conventional prefix (`feat:`, `fix:`, `docs:`, `chore:`). Rebase onto `origin/trunk` rather than merging it in.
 - File an issue for anything you notice that is out of scope, and keep issue bodies evergreen: edit the body as understanding improves rather than appending comments.
 - A new design decision gets an [ADR](adr/README.md).
-- Dependabot keeps dependencies current. Its `toolchain` group needs hand edits on the same branch: run `vp dlx --package=vite-plus@<v> vp migrate --no-interactive` to re-pin `vite` and `vitest`, move `typescript` / `@typescript/native` only to a pair the new `@effect/tsgo` supports (see the catalog comment), and bump the devcontainer image tag to the new `vite-plus`.
+- Dependabot keeps dependencies current. Its `toolchain` group needs hand edits, made in a PR from a new branch started from Dependabot's head (never push to a `dependabot/*` branch, which stops it rebasing; it closes its own PR once yours merges): run `vp dlx --package=vite-plus@<v> vp migrate --no-interactive` to re-pin `vite` and `vitest`, move `typescript` / `@typescript/native` only to a pair the new `@effect/tsgo` supports (see the catalog comment), and bump the devcontainer image tag to the new `vite-plus`.
 
 ## Toolchain
 
