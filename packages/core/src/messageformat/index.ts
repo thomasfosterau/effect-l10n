@@ -21,3 +21,8 @@ export * as MessageFormatError from "./MessageFormatError";
  * @since 0.1.0
  */
 export * as Parser from "./Parser";
+
+/**
+ * @since 0.1.0
+ */
+export * as Serializer from "./Serializer";
