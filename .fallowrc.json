@@ -2,6 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
   "entry": [
     "packages/*/src/**/*.test.ts",
+    "packages/*/src/__fixtures__/**/*.ts",
     "vite.config.ts",
     "vite.package.ts",
     "packages/*/vite.config.ts"
@@ -30,7 +31,11 @@
       },
       {
         "name": "core",
-        "patterns": ["packages/core/src/*.ts"]
+        "patterns": [
+          "packages/core/src/*.ts",
+          "packages/core/src/internal/**",
+          "packages/core/src/__fixtures__/**"
+        ]
       },
       {
         "name": "compiler",

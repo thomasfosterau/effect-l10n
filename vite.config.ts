@@ -119,6 +119,19 @@ export default defineConfig({
         files: ["packages/core/src/messageformat/Parser.ts"],
         rules: { "effect/imperative-loops": "off" },
       },
+      // Locale negotiation is inlined into the web runtime, which never imports
+      // `effect` (ADR 0003): plain JavaScript, with `Locale` wrapping it.
+      {
+        files: ["packages/core/src/internal/negotiation.ts"],
+        rules: {
+          "effect/imperative-loops": "off",
+          "effect/no-length-comparison": "off",
+          "effect/prefer-arr-match": "off",
+          "effect/prefer-option-over-null": "off",
+          "effect/avoid-native-object-helpers": "off",
+          "effect/no-known-value-widening": "off",
+        },
+      },
       // Assertion helpers wrap `expect` and are called from inside test blocks.
       {
         files: ["packages/testing/src/**/*.ts"],

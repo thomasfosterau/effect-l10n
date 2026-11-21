@@ -1,0 +1,132 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`load > loads the example project 1`] = `
+{
+  "diagnostics": [
+    {
+      "code": "syntax-error",
+      "file": "src/l10n/checkout.messages.ts",
+      "locale": undefined,
+      "messageId": "checkout.broken",
+      "severity": "error",
+    },
+    {
+      "code": "extra-translation",
+      "file": "translations/de.json",
+      "locale": "de",
+      "messageId": "removed",
+      "severity": "warning",
+    },
+    {
+      "code": "unknown-variable",
+      "file": "translations/pl.json",
+      "locale": "pl",
+      "messageId": "greeting",
+      "severity": "error",
+    },
+    {
+      "code": "missing-variable",
+      "file": "translations/pl.json",
+      "locale": "pl",
+      "messageId": "greeting",
+      "severity": "warning",
+    },
+    {
+      "code": "missing-plural-category",
+      "file": "translations/pl.json",
+      "locale": "pl",
+      "messageId": "items",
+      "severity": "warning",
+    },
+    {
+      "code": "missing-translation",
+      "file": undefined,
+      "locale": "pl",
+      "messageId": "checkout.total",
+      "severity": "error",
+    },
+  ],
+  "fallbacks": {
+    "de": [
+      "de",
+      "en",
+    ],
+    "en": [
+      "en",
+    ],
+    "pl": [
+      "pl",
+      "en",
+    ],
+  },
+  "locales": [
+    "en",
+    "de",
+    "pl",
+  ],
+  "messages": [
+    {
+      "description": "Shown on the dashboard header",
+      "file": "src/l10n/app.messages.ts",
+      "id": "greeting",
+      "parsed": true,
+    },
+    {
+      "description": undefined,
+      "file": "src/l10n/app.messages.ts",
+      "id": "items",
+      "parsed": true,
+    },
+    {
+      "description": undefined,
+      "file": "src/l10n/app.messages.ts",
+      "id": "brand",
+      "parsed": true,
+    },
+    {
+      "description": undefined,
+      "file": "src/l10n/checkout.messages.ts",
+      "id": "checkout.total",
+      "parsed": true,
+    },
+    {
+      "description": undefined,
+      "file": "src/l10n/checkout.messages.ts",
+      "id": "checkout.broken",
+      "parsed": false,
+    },
+  ],
+  "translations": [
+    [
+      "de",
+      "greeting",
+      "reviewed",
+    ],
+    [
+      "de",
+      "items",
+      "translated",
+    ],
+    [
+      "de",
+      "checkout.total",
+      "translated",
+    ],
+    [
+      "de",
+      "removed",
+      "translated",
+    ],
+    [
+      "pl",
+      "greeting",
+      "translated",
+    ],
+    [
+      "pl",
+      "items",
+      "translated",
+    ],
+  ],
+}
+`;

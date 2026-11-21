@@ -24,3 +24,22 @@ Every problem the MessageFormat 2 engine reports is a `MessageFormatError` whose
 Function errors (`FunctionError`) come from a function handler while a message is formatted; the formatter reports them, and its own resolution errors, alongside the output rather than instead of it. A message with data model errors formats as `{�}`. A `bad-option` usually leaves out just that option and a `bad-variant-key` just that key, while `bad-operand` and `unsupported-operation` make the expression fall back.
 
 The parser reports `duplicate-option-name` because the data model's options are a record, which can't hold a duplicate. A variable declared twice is always `duplicate-declaration`, so there's no separate shadowing warning.
+
+## Project diagnostics
+
+The project loader (`Project.load`) reports every finding above for each source message and translation, plus its own, as the root entry's `Diagnostic`, with the `file`, `messageId` and `locale` it was found at. The config's `severities` overrides any code's severity, or turns it `off`.
+
+| Code                      | Reason                  | Severity | Meaning                                                                                  |
+| ------------------------- | ----------------------- | -------- | ---------------------------------------------------------------------------------------- |
+| `invalid-message-id`      | `InvalidMessageId`      | error    | An ID isn't dot-separated identifiers (`[A-Za-z][A-Za-z0-9_]*`).                         |
+| `duplicate-message-id`    | `DuplicateMessageId`    | error    | Two messages, in one catalog file or several, have the same ID.                          |
+| `message-id-collision`    | `MessageIdCollision`    | error    | Distinct IDs mangle to the same identifier on a platform, such as `fooBar` / `foo_bar`.  |
+| `unknown-variable`        | `UnknownVariable`       | error    | A translation reads a variable its source message doesn't.                               |
+| `selector-mismatch`       | `SelectorMismatch`      | error    | A translation selects on a variable through a different function than its source.        |
+| `missing-variable`        | `MissingVariable`       | warning  | A translation never reads one of its source's parameters.                                |
+| `missing-plural-category` | `MissingPluralCategory` | warning  | A plural selector has no variant for some of the target locale's CLDR plural categories. |
+| `stale-translation`       | `StaleTranslation`      | warning  | The source message changed after it was translated (its `sourceHash` differs).           |
+| `extra-translation`       | `ExtraTranslation`      | warning  | A translation's message is no longer in the source.                                      |
+| `missing-translation`     | `MissingTranslation`    | warning  | A locale has no translation of a message (not reported for `doNotTranslate` messages).   |
+
+A config that doesn't decode fails the load with `ConfigError`, a module that doesn't load with `ModuleLoadError` (with its line and column when the runtime gives them), and a malformed translation file with `TranslationFileError`.

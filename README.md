@@ -16,6 +16,7 @@ Once released: `vp add @thomasfosterau/effect-l10n effect` (`effect` is a peer).
 
 ## More
 
+- [Authoring messages, catalogs and translations](docs/authoring.md)
 - [Design decisions (ADRs)](docs/adr/README.md)
 - [Contributing](docs/CONTRIBUTING.md) and [publishing](docs/PUBLISHING.md)
 - License: [MIT](LICENSE.md)

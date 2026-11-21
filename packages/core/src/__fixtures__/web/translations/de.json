@@ -1,0 +1,9 @@
+{
+  "locale": "de",
+  "messages": {
+    "greeting": { "source": "Hallo, {$name}!", "state": "reviewed" },
+    "items": ".input {$count :integer} .match $count one {{Ein Artikel}} * {{{$count} Artikel}}",
+    "checkout.total": "Summe: {$amount :currency currency=EUR}",
+    "removed": "Entfernt"
+  }
+}
