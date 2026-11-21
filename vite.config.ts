@@ -113,6 +113,12 @@ export default defineConfig({
         files: ["packages/*/src/index.ts", "packages/*/src/*/index.ts"],
         rules: { "unicorn/no-empty-file": "off" },
       },
+      // The parser is the engine's hot path: plain loops over a cursor, as
+      // its issue (#20) allows, measured rather than mapped.
+      {
+        files: ["packages/core/src/messageformat/Parser.ts"],
+        rules: { "effect/imperative-loops": "off" },
+      },
       // Assertion helpers wrap `expect` and are called from inside test blocks.
       {
         files: ["packages/testing/src/**/*.ts"],
@@ -126,8 +132,10 @@ export default defineConfig({
     },
   },
   fmt: {
-    // `__golden__/` holds committed target output, compared byte for byte.
+    // `__golden__/` holds committed target output, compared byte for byte;
+    // `__conformance__/` holds the MF2 test suite, copied verbatim.
     ignorePatterns: [
+      "**/__conformance__/**",
       "**/dist/**",
       "coverage/**",
       "**/__golden__/**",

@@ -48,6 +48,14 @@
       "types": "./dist/messageformat/DataModel.d.ts",
       "default": "./dist/messageformat/DataModel.js"
     },
+    "./messageformat/MessageFormatError": {
+      "types": "./dist/messageformat/MessageFormatError.d.ts",
+      "default": "./dist/messageformat/MessageFormatError.js"
+    },
+    "./messageformat/Parser": {
+      "types": "./dist/messageformat/Parser.d.ts",
+      "default": "./dist/messageformat/Parser.js"
+    },
     "./compiler": {
       "types": "./dist/compiler/index.d.ts",
       "default": "./dist/compiler/index.js"
