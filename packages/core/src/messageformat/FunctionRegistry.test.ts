@@ -12,7 +12,7 @@ import { testFunctions } from "./internal/testFunctions";
 import * as MessageFunction from "./MessageFunction";
 import type { MessageValue } from "./MessageValue";
 
-const intl = MessageFunction.makeIntlCache();
+const intl = MessageFunction.newIntlCache();
 
 const registry = FunctionRegistry.of({
   functions: R.fromEntries(Arr.map([...defaults, ...testFunctions], (fn) => [fn.name, fn])),

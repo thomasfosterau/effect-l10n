@@ -4,13 +4,22 @@ import * as Result from "effect/Result";
 import * as Schema from "effect/Schema";
 import * as MessageFunction from "../../MessageFunction";
 
-/** `:string`: selects by NFC equality and formats the operand as is. */
+/**
+ * `:string`: selects by NFC equality and formats the operand as is. An
+ * unresolved operand reads as the empty string, so the variants still select.
+ */
 export const string = MessageFunction.make({
   name: "string",
-  operand: Schema.Union([Schema.String, Schema.Finite, Schema.Boolean, Schema.BigInt]),
+  operand: Schema.Union([
+    Schema.String,
+    Schema.Finite,
+    Schema.Boolean,
+    Schema.BigInt,
+    Schema.Undefined,
+  ]),
   options: {},
   resolve: ({ context, operand }) => {
-    const value = String(operand);
+    const value = operand === undefined ? "" : String(operand);
     const key = value.normalize("NFC");
     return Result.succeed({
       type: "string",

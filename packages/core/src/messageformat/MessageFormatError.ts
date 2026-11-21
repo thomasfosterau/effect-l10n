@@ -247,6 +247,60 @@ export class UnsupportedOperation extends Schema.TaggedError<
 }
 
 /**
+ * `unresolved-variable`: a variable is neither declared nor given as a
+ * parameter.
+ *
+ * @category resolution errors
+ * @since 0.1.0
+ */
+export class UnresolvedVariable extends Schema.TaggedError<
+  UnresolvedVariable,
+  { readonly brand: unique symbol }
+>()("UnresolvedVariable", { span: at, variable: Schema.String }) {
+  /** The spec's name for this error. */
+  readonly code = "unresolved-variable";
+  override get message(): string {
+    return `$${this.variable} has no value`;
+  }
+}
+
+/**
+ * `unknown-function`: no function in the registry has this name, or it is a
+ * draft and drafts are off.
+ *
+ * @category resolution errors
+ * @since 0.1.0
+ */
+export class UnknownFunction extends Schema.TaggedError<
+  UnknownFunction,
+  { readonly brand: unique symbol }
+>()("UnknownFunction", { span: at, function: Schema.String }) {
+  /** The spec's name for this error. */
+  readonly code = "unknown-function";
+  override get message(): string {
+    return `:${this.function} isn't a known function`;
+  }
+}
+
+/**
+ * `bad-selector`: a selector's value doesn't support selection, so it
+ * matches only `*`.
+ *
+ * @category resolution errors
+ * @since 0.1.0
+ */
+export class BadSelector extends Schema.TaggedError<
+  BadSelector,
+  { readonly brand: unique symbol }
+>()("BadSelector", { span: at, variable: Schema.String }) {
+  /** The spec's name for this error. */
+  readonly code = "bad-selector";
+  override get message(): string {
+    return `$${this.variable} can't be selected on`;
+  }
+}
+
+/**
  * An error a function handler reports: the spec's _Message Function Errors_.
  *
  * @category function errors
@@ -285,6 +339,9 @@ export const Reason = Schema.Union([
   BadOption,
   BadVariantKey,
   UnsupportedOperation,
+  UnresolvedVariable,
+  UnknownFunction,
+  BadSelector,
 ]);
 
 /**

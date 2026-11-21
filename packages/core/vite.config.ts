@@ -4,6 +4,7 @@ export default packageConfig({
   index: "src/index.ts",
   "messageformat/index": "src/messageformat/index.ts",
   "messageformat/DataModel": "src/messageformat/DataModel.ts",
+  "messageformat/Formatter": "src/messageformat/Formatter.ts",
   "messageformat/FunctionRegistry": "src/messageformat/FunctionRegistry.ts",
   "messageformat/MessageFormatError": "src/messageformat/MessageFormatError.ts",
   "messageformat/MessageFunction": "src/messageformat/MessageFunction.ts",
