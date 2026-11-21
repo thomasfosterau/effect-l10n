@@ -7,5 +7,6 @@ export default packageConfig({
   "messageformat/MessageFormatError": "src/messageformat/MessageFormatError.ts",
   "messageformat/Parser": "src/messageformat/Parser.ts",
   "messageformat/Serializer": "src/messageformat/Serializer.ts",
+  "messageformat/Validation": "src/messageformat/Validation.ts",
   "compiler/index": "src/compiler/index.ts",
 });
