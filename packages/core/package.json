@@ -68,6 +68,10 @@
       "types": "./dist/Project.d.ts",
       "default": "./dist/Project.js"
     },
+    "./Report": {
+      "types": "./dist/Report.d.ts",
+      "default": "./dist/Report.js"
+    },
     "./Translation": {
       "types": "./dist/Translation.d.ts",
       "default": "./dist/Translation.js"
@@ -119,6 +123,30 @@
     "./compiler": {
       "types": "./dist/compiler/index.d.ts",
       "default": "./dist/compiler/index.js"
+    },
+    "./compiler/Compiler": {
+      "types": "./dist/compiler/Compiler.d.ts",
+      "default": "./dist/compiler/Compiler.js"
+    },
+    "./compiler/Debug": {
+      "types": "./dist/compiler/Debug.d.ts",
+      "default": "./dist/compiler/Debug.js"
+    },
+    "./compiler/Ir": {
+      "types": "./dist/compiler/Ir.d.ts",
+      "default": "./dist/compiler/Ir.js"
+    },
+    "./compiler/Lowering": {
+      "types": "./dist/compiler/Lowering.d.ts",
+      "default": "./dist/compiler/Lowering.js"
+    },
+    "./compiler/Plan": {
+      "types": "./dist/compiler/Plan.d.ts",
+      "default": "./dist/compiler/Plan.js"
+    },
+    "./compiler/Target": {
+      "types": "./dist/compiler/Target.d.ts",
+      "default": "./dist/compiler/Target.js"
     }
   },
   "publishConfig": {
@@ -128,6 +156,7 @@
     "@effect/language-service": "catalog:",
     "@effect/platform-node-shared": "catalog:",
     "@effect/vitest": "catalog:",
+    "@thomasfosterau/effect-l10n-testing": "workspace:*",
     "effect": "catalog:",
     "vite-plus": "catalog:"
   },

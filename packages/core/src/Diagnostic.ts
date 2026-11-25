@@ -1,8 +1,8 @@
 /**
  * Findings about a project: invalid or colliding message IDs, translations
- * that don't match their source, and the MessageFormat 2 engine's own
- * diagnostics, each with where it was found. Findings accumulate; none
- * stops the load.
+ * that don't match their source, what a target can't compile, and the
+ * MessageFormat 2 engine's own diagnostics, each with where it was found.
+ * Findings accumulate; none stops the load.
  *
  * @since 0.1.0
  */
@@ -196,6 +196,58 @@ export class StaleTranslation extends Schema.TaggedError<
 }
 
 /**
+ * `unsupported-feature`: a target can't express part of a message, even
+ * by moving it to its accessors (which it doesn't generate).
+ *
+ * @category reasons
+ * @since 0.1.0
+ */
+export class UnsupportedFeature extends Schema.TaggedError<
+  UnsupportedFeature,
+  { readonly brand: unique symbol }
+>()("UnsupportedFeature", { target: Schema.String, feature: Schema.String }) {
+  /** effect-l10n's name for this finding. */
+  readonly code = "unsupported-feature";
+  override get message(): string {
+    return `The ${this.target} target can't express ${this.feature}`;
+  }
+}
+
+/**
+ * `unknown-target`: the config lists a target with no implementation.
+ *
+ * @category reasons
+ * @since 0.1.0
+ */
+export class UnknownTarget extends Schema.TaggedError<
+  UnknownTarget,
+  { readonly brand: unique symbol }
+>()("UnknownTarget", { target: Schema.String }) {
+  /** effect-l10n's name for this finding. */
+  readonly code = "unknown-target";
+  override get message(): string {
+    return `No implementation of the ${this.target} target; list it with its own constructor`;
+  }
+}
+
+/**
+ * `target-failed`: a target failed to emit; the other targets still ran.
+ *
+ * @category reasons
+ * @since 0.1.0
+ */
+export class TargetFailed extends Schema.TaggedError<
+  TargetFailed,
+  { readonly brand: unique symbol }
+>()("TargetFailed", { target: Schema.String, details: Schema.String }) {
+  /** effect-l10n's name for this finding. */
+  readonly code = "target-failed";
+  override get message(): string {
+    return `The ${this.target} target failed: ${this.details}`;
+  }
+}
+
+/**
  * Why a project was flagged: a reason above, or one from the MessageFormat
  * 2 engine about a message or translation.
  *
@@ -213,6 +265,9 @@ export const Reason = Schema.Union([
   MissingTranslation,
   ExtraTranslation,
   StaleTranslation,
+  UnsupportedFeature,
+  UnknownTarget,
+  TargetFailed,
   MessageFormatError.Reason,
 ]);
 

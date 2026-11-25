@@ -43,3 +43,27 @@ The project loader (`Project.load`) reports every finding above for each source 
 | `missing-translation`     | `MissingTranslation`    | warning  | A locale has no translation of a message (not reported for `doNotTranslate` messages).   |
 
 A config that doesn't decode fails the load with `ConfigError`, a module that doesn't load with `ModuleLoadError` (with its line and column when the runtime gives them), and a malformed translation file with `TranslationFileError`.
+
+## Compiler diagnostics
+
+The compiler (`Compiler.build`) reports the project's findings, then each target's, in its `BuildResult`. Severities come from the config's `severities` as above.
+
+| Code                  | Reason               | Severity | Meaning                                                                                                                     |
+| --------------------- | -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------- |
+| `unsupported-feature` | `UnsupportedFeature` | error    | A target can't express part of a message, such as selection on a `:string` or `:date` formatting, and has no accessor code. |
+| `unknown-target`      | `UnknownTarget`      | error    | A config target has no compiler implementation (made with `defineTarget` rather than a target package).                     |
+| `target-failed`       | `TargetFailed`       | error    | A target's options didn't decode, or its `emit` failed. The other targets still run.                                        |
+
+A build fails with `CompileError` when the project can't be loaded (`ConfigError`, `ModuleLoadError`, `TranslationFileError`) or its output can't be written (`OutputError`, code `output-error`, such as a file outside the target's directory). A target's own failure is `TargetError` (code `target-error`), which the compiler reports as `target-failed`.
+
+## Rendering
+
+`Report.locate` places a diagnostic in its file. A MessageFormat 2 span is an offset into the message's source; `locate` finds that source as a whole string literal in the catalog or translation file (a template literal, a double-quoted or JSON string, or a single-quoted string) and maps the offset through the literal's escapes, so it lands on the right line and column. Without a span, it points at the start of the message.
+
+| Renderer        | Output                                                                                                                                                   |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Report.text`   | One block per finding: `error[code]: message (id, locale)`, the file and position, and a code frame. No colours.                                         |
+| `Report.json`   | A JSON array of `JsonDiagnostic`: `severity`, `code`, `message`, and `file`, `messageId`, `locale`, `line`, `column`, `endLine`, `endColumn` when known. |
+| `Report.github` | GitHub Actions workflow commands (`::error file=…,line=…,col=…,title=code::message`), which annotate the pull request.                                   |
+
+Colours, `Cause.pretty` and the Vite overlay belong to the CLI and the Vite plugin.

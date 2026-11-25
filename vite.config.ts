@@ -14,7 +14,7 @@ export default defineConfig({
       // Everything CI runs, in order. `vp run ci` locally is the same run.
       ci: {
         command:
-          "vp check && vp run check && vp run -r test:unit && vp run -r build && vp run -r check:package && pnpm audit --audit-level high",
+          "vp run -r build && vp check && vp run check && vp run -r test:unit && vp run -r check:package && pnpm audit --audit-level high",
         cache: false,
       },
       // The type gate: every package's `tsc`, then the root configs. A new
@@ -24,6 +24,7 @@ export default defineConfig({
         dependsOn: [
           "@thomasfosterau/effect-l10n#check",
           "@thomasfosterau/effect-l10n-testing#check",
+          "@thomasfosterau/effect-l10n-node#check",
         ],
         cache: { input: cacheInputs, output: [] },
       },

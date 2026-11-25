@@ -42,7 +42,7 @@ Platform-neutral code that needs only `effect` joins `packages/core` as a new su
 
 ## Before pushing
 
-Run `vp run ci` (or `vp check`, `vp run check`, `vp run -r test:unit`, `vp run -r build`, `vp run -r check:package` one at a time). CI ([ci.yml](../.github/workflows/ci.yml)) runs `vp run ci` on Node `lts` and `latest` with no secrets. Workflows pin actions by exact tag, locked to commits by `.github/workflows/actions.lock`: run `gh actions-lock` after changing a `uses:`.
+Run `vp run ci` (or `vp run -r build`, `vp check`, `vp run check`, `vp run -r test:unit`, `vp run -r check:package` one at a time; build first, because the type-aware lint resolves sibling packages through their `dist/`). CI ([ci.yml](../.github/workflows/ci.yml)) runs `vp run ci` on Node `lts` and `latest` with no secrets. Workflows pin actions by exact tag, locked to commits by `.github/workflows/actions.lock`: run `gh actions-lock` after changing a `uses:`.
 
 ## Changesets
 

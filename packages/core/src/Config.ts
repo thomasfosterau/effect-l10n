@@ -39,6 +39,8 @@ export interface Target<S extends OptionsSchema = OptionsSchema> {
   readonly target: string;
   readonly options: S["Encoded"];
   readonly schema: S;
+  /** The implementation the compiler runs; a compiler `Target` sets it. */
+  readonly plugin?: unknown;
 }
 
 const isTarget = (u: unknown): u is Target =>
@@ -46,7 +48,9 @@ const isTarget = (u: unknown): u is Target =>
 
 /**
  * Declares a target for the config: `defineTarget("web", WebOptions)` gives
- * the `web({ ... })` function a config calls, typed by the schema.
+ * the `web({ ... })` function a config calls, typed by the schema. It has no
+ * implementation, so the compiler reports it as `unknown-target`; target
+ * packages use the compiler's `Target.make`, which sets one.
  *
  * @category targets
  * @since 0.1.0
@@ -65,8 +69,9 @@ const Translations = Schema.Struct({
 
 /**
  * The config schema. Decoding canonicalises locales and fills defaults:
- * no fallbacks, functions, targets or severity overrides, and JSON
- * translations in `translations/`.
+ * no fallbacks, functions, targets or severity overrides, JSON
+ * translations in `translations/`, and output in `generated/l10n/`, one
+ * directory per target.
  *
  * @category schemas
  * @since 0.1.0
@@ -78,6 +83,7 @@ export const Config = Schema.Struct({
     Schema.withDecodingDefaultKey(Effect.succeed({})),
   ),
   catalogs: Schema.NonEmptyArray(Schema.String),
+  outDir: Schema.String.pipe(Schema.withDecodingDefaultKey(Effect.succeed("generated/l10n"))),
   translations: Translations.pipe(
     Schema.withDecodingDefaultKey(Effect.succeed({ format: "json" as const, dir: "translations" })),
   ),
@@ -137,6 +143,7 @@ export interface Input<L extends string> {
   readonly locales: ReadonlyArray<L>;
   readonly fallbacks?: { readonly [K in NoInfer<L>]?: ReadonlyArray<NoInfer<L>> };
   readonly catalogs: readonly [string, ...Array<string>];
+  readonly outDir?: string;
   readonly translations?: typeof Translations.Encoded;
   readonly functions?: ReadonlyArray<MessageFunction>;
   readonly targets?: ReadonlyArray<Target>;

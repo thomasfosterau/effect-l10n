@@ -2,13 +2,15 @@
  * Loads TypeScript modules (the config and catalogs) at build time. The
  * default layer uses the runtime's own `import()`, so it needs a runtime
  * that runs TypeScript: Node 22.18 or later, Bun, Deno, or Vite's module
- * runner.
+ * runner. A module is loaded again once its file changes, so watch builds
+ * see edits; the modules it imports are not.
  *
  * @since 0.1.0
  */
 import * as Arr from "effect/Array";
 import * as Context from "effect/Context";
 import * as Effect from "effect/Effect";
+import * as FileSystem from "effect/FileSystem";
 import * as Layer from "effect/Layer";
 import * as Option from "effect/Option";
 import * as Path from "effect/Path";
@@ -58,32 +60,49 @@ export class ModuleLoader extends Context.Service<
   ModuleLoader,
   { readonly load: (file: string) => Effect.Effect<Exports, ModuleLoadError> }
 >()("@thomasfosterau/effect-l10n/ModuleLoader") {
-  /** Loads with the runtime's `import()`, resolving paths with `Path`. */
-  static readonly layer: Layer.Layer<ModuleLoader, never, Path.Path> = Layer.effect(
-    ModuleLoader,
-    Effect.gen(function* () {
-      const path = yield* Path.Path;
-      return {
-        load: (file) =>
-          path.toFileUrl(path.resolve(file)).pipe(
-            Effect.mapError((error) => new ModuleLoadError({ file, details: error.message })),
-            Effect.flatMap((url) =>
-              Effect.tryPromise({
-                try: (): Promise<Exports> => import(/* @vite-ignore */ url.href),
-                catch: (cause) =>
-                  P.hasProperty(cause, "message") && P.isString(cause.message)
-                    ? loadError(
-                        file,
-                        cause.message,
-                        P.hasProperty(cause, "stack") && P.isString(cause.stack) ? cause.stack : "",
-                      )
-                    : loadError(file, String(cause), ""),
-              }),
+  /**
+   * Loads with the runtime's `import()`, resolving paths with `Path`. The
+   * URL carries the file's modification time, so the runtime's module cache
+   * returns a module again only while its file is unchanged.
+   */
+  static readonly layer: Layer.Layer<ModuleLoader, never, Path.Path | FileSystem.FileSystem> =
+    Layer.effect(
+      ModuleLoader,
+      Effect.gen(function* () {
+        const path = yield* Path.Path;
+        const fs = yield* FileSystem.FileSystem;
+        const version = (file: string) =>
+          fs.stat(file).pipe(
+            Effect.map((info) =>
+              Option.match(info.mtime, { onNone: () => "", onSome: (t) => `?v=${t.getTime()}` }),
             ),
-          ),
-      };
-    }),
-  );
+            Effect.orElseSucceed(() => ""),
+          );
+        return {
+          load: (file) =>
+            Effect.all([path.toFileUrl(path.resolve(file)), version(path.resolve(file))], {
+              concurrency: 1,
+            }).pipe(
+              Effect.mapError((error) => new ModuleLoadError({ file, details: error.message })),
+              Effect.flatMap(([url, v]) =>
+                Effect.tryPromise({
+                  try: (): Promise<Exports> => import(/* @vite-ignore */ `${url.href}${v}`),
+                  catch: (cause) =>
+                    P.hasProperty(cause, "message") && P.isString(cause.message)
+                      ? loadError(
+                          file,
+                          cause.message,
+                          P.hasProperty(cause, "stack") && P.isString(cause.stack)
+                            ? cause.stack
+                            : "",
+                        )
+                      : loadError(file, String(cause), ""),
+                }),
+              ),
+            ),
+        };
+      }),
+    );
 }
 
 /** The runtime's error, with the position it gives in `file` if any. */

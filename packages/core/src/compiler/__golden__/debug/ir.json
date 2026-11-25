@@ -1,0 +1,649 @@
+{
+  "target": "debug",
+  "sourceLocale": "en",
+  "locales": [
+    "en",
+    "de",
+    "ar"
+  ],
+  "messages": [
+    {
+      "id": "greeting",
+      "file": "src/app.messages.ts",
+      "description": "The dashboard header",
+      "doNotTranslate": false,
+      "params": [
+        {
+          "name": "name",
+          "functions": []
+        }
+      ],
+      "locales": {
+        "en": {
+          "locale": "en",
+          "from": "en",
+          "declarations": [],
+          "plan": {
+            "_tag": "Leaf",
+            "pattern": [
+              "Hello, ",
+              {
+                "type": "expression",
+                "arg": {
+                  "type": "variable",
+                  "name": "name",
+                  "span": {
+                    "start": 8,
+                    "end": 13
+                  }
+                },
+                "attributes": {},
+                "span": {
+                  "start": 7,
+                  "end": 14
+                }
+              },
+              "!"
+            ]
+          },
+          "preformat": []
+        },
+        "de": {
+          "locale": "de",
+          "from": "de",
+          "declarations": [],
+          "plan": {
+            "_tag": "Leaf",
+            "pattern": [
+              "Hallo, ",
+              {
+                "type": "expression",
+                "arg": {
+                  "type": "variable",
+                  "name": "name",
+                  "span": {
+                    "start": 8,
+                    "end": 13
+                  }
+                },
+                "attributes": {},
+                "span": {
+                  "start": 7,
+                  "end": 14
+                }
+              },
+              "!"
+            ]
+          },
+          "preformat": []
+        },
+        "ar": {
+          "locale": "ar",
+          "from": "en",
+          "declarations": [],
+          "plan": {
+            "_tag": "Leaf",
+            "pattern": [
+              "Hello, ",
+              {
+                "type": "expression",
+                "arg": {
+                  "type": "variable",
+                  "name": "name",
+                  "span": {
+                    "start": 8,
+                    "end": 13
+                  }
+                },
+                "attributes": {},
+                "span": {
+                  "start": 7,
+                  "end": 14
+                }
+              },
+              "!"
+            ]
+          },
+          "preformat": []
+        }
+      }
+    },
+    {
+      "id": "invite",
+      "file": "src/app.messages.ts",
+      "doNotTranslate": false,
+      "params": [
+        {
+          "name": "host",
+          "functions": [
+            "string"
+          ]
+        }
+      ],
+      "locales": {
+        "en": {
+          "locale": "en",
+          "from": "en",
+          "declarations": [
+            {
+              "type": "input",
+              "name": "host",
+              "value": {
+                "type": "expression",
+                "arg": {
+                  "type": "variable",
+                  "name": "host",
+                  "span": {
+                    "start": 8,
+                    "end": 13
+                  }
+                },
+                "function": {
+                  "type": "function",
+                  "name": "string",
+                  "options": {},
+                  "span": {
+                    "start": 14,
+                    "end": 21
+                  }
+                },
+                "attributes": {},
+                "span": {
+                  "start": 7,
+                  "end": 22
+                }
+              },
+              "span": {
+                "start": 0,
+                "end": 22
+              }
+            }
+          ],
+          "plan": {
+            "_tag": "Switch",
+            "selector": "host",
+            "function": "string",
+            "kind": "other",
+            "at": "resource",
+            "cases": [
+              {
+                "key": "alex",
+                "plan": {
+                  "_tag": "Leaf",
+                  "pattern": [
+                    "Alex invited you"
+                  ]
+                }
+              }
+            ],
+            "otherwise": {
+              "_tag": "Leaf",
+              "pattern": [
+                {
+                  "type": "expression",
+                  "arg": {
+                    "type": "variable",
+                    "name": "host",
+                    "span": {
+                      "start": 71,
+                      "end": 76
+                    }
+                  },
+                  "attributes": {},
+                  "span": {
+                    "start": 70,
+                    "end": 77
+                  }
+                },
+                " invited you"
+              ]
+            }
+          },
+          "preformat": []
+        },
+        "de": {
+          "locale": "de",
+          "from": "en",
+          "declarations": [
+            {
+              "type": "input",
+              "name": "host",
+              "value": {
+                "type": "expression",
+                "arg": {
+                  "type": "variable",
+                  "name": "host",
+                  "span": {
+                    "start": 8,
+                    "end": 13
+                  }
+                },
+                "function": {
+                  "type": "function",
+                  "name": "string",
+                  "options": {},
+                  "span": {
+                    "start": 14,
+                    "end": 21
+                  }
+                },
+                "attributes": {},
+                "span": {
+                  "start": 7,
+                  "end": 22
+                }
+              },
+              "span": {
+                "start": 0,
+                "end": 22
+              }
+            }
+          ],
+          "plan": {
+            "_tag": "Switch",
+            "selector": "host",
+            "function": "string",
+            "kind": "other",
+            "at": "resource",
+            "cases": [
+              {
+                "key": "alex",
+                "plan": {
+                  "_tag": "Leaf",
+                  "pattern": [
+                    "Alex invited you"
+                  ]
+                }
+              }
+            ],
+            "otherwise": {
+              "_tag": "Leaf",
+              "pattern": [
+                {
+                  "type": "expression",
+                  "arg": {
+                    "type": "variable",
+                    "name": "host",
+                    "span": {
+                      "start": 71,
+                      "end": 76
+                    }
+                  },
+                  "attributes": {},
+                  "span": {
+                    "start": 70,
+                    "end": 77
+                  }
+                },
+                " invited you"
+              ]
+            }
+          },
+          "preformat": []
+        },
+        "ar": {
+          "locale": "ar",
+          "from": "en",
+          "declarations": [
+            {
+              "type": "input",
+              "name": "host",
+              "value": {
+                "type": "expression",
+                "arg": {
+                  "type": "variable",
+                  "name": "host",
+                  "span": {
+                    "start": 8,
+                    "end": 13
+                  }
+                },
+                "function": {
+                  "type": "function",
+                  "name": "string",
+                  "options": {},
+                  "span": {
+                    "start": 14,
+                    "end": 21
+                  }
+                },
+                "attributes": {},
+                "span": {
+                  "start": 7,
+                  "end": 22
+                }
+              },
+              "span": {
+                "start": 0,
+                "end": 22
+              }
+            }
+          ],
+          "plan": {
+            "_tag": "Switch",
+            "selector": "host",
+            "function": "string",
+            "kind": "other",
+            "at": "resource",
+            "cases": [
+              {
+                "key": "alex",
+                "plan": {
+                  "_tag": "Leaf",
+                  "pattern": [
+                    "Alex invited you"
+                  ]
+                }
+              }
+            ],
+            "otherwise": {
+              "_tag": "Leaf",
+              "pattern": [
+                {
+                  "type": "expression",
+                  "arg": {
+                    "type": "variable",
+                    "name": "host",
+                    "span": {
+                      "start": 71,
+                      "end": 76
+                    }
+                  },
+                  "attributes": {},
+                  "span": {
+                    "start": 70,
+                    "end": 77
+                  }
+                },
+                " invited you"
+              ]
+            }
+          },
+          "preformat": []
+        }
+      }
+    },
+    {
+      "id": "items",
+      "file": "src/app.messages.ts",
+      "doNotTranslate": false,
+      "params": [
+        {
+          "name": "count",
+          "functions": [
+            "integer"
+          ]
+        }
+      ],
+      "locales": {
+        "en": {
+          "locale": "en",
+          "from": "en",
+          "declarations": [
+            {
+              "type": "input",
+              "name": "count",
+              "value": {
+                "type": "expression",
+                "arg": {
+                  "type": "variable",
+                  "name": "count",
+                  "span": {
+                    "start": 8,
+                    "end": 14
+                  }
+                },
+                "function": {
+                  "type": "function",
+                  "name": "integer",
+                  "options": {},
+                  "span": {
+                    "start": 15,
+                    "end": 23
+                  }
+                },
+                "attributes": {},
+                "span": {
+                  "start": 7,
+                  "end": 24
+                }
+              },
+              "span": {
+                "start": 0,
+                "end": 24
+              }
+            }
+          ],
+          "plan": {
+            "_tag": "Switch",
+            "selector": "count",
+            "function": "integer",
+            "kind": "plural",
+            "at": "resource",
+            "cases": [
+              {
+                "key": "0",
+                "plan": {
+                  "_tag": "Leaf",
+                  "pattern": [
+                    "No items"
+                  ]
+                }
+              },
+              {
+                "key": "one",
+                "plan": {
+                  "_tag": "Leaf",
+                  "pattern": [
+                    "One item"
+                  ]
+                }
+              }
+            ],
+            "otherwise": {
+              "_tag": "Leaf",
+              "pattern": [
+                {
+                  "type": "expression",
+                  "arg": {
+                    "type": "variable",
+                    "name": "count",
+                    "span": {
+                      "start": 76,
+                      "end": 82
+                    }
+                  },
+                  "attributes": {},
+                  "span": {
+                    "start": 75,
+                    "end": 83
+                  }
+                },
+                " items"
+              ]
+            }
+          },
+          "preformat": []
+        },
+        "de": {
+          "locale": "de",
+          "from": "de",
+          "declarations": [
+            {
+              "type": "input",
+              "name": "count",
+              "value": {
+                "type": "expression",
+                "arg": {
+                  "type": "variable",
+                  "name": "count",
+                  "span": {
+                    "start": 8,
+                    "end": 14
+                  }
+                },
+                "function": {
+                  "type": "function",
+                  "name": "integer",
+                  "options": {},
+                  "span": {
+                    "start": 15,
+                    "end": 23
+                  }
+                },
+                "attributes": {},
+                "span": {
+                  "start": 7,
+                  "end": 24
+                }
+              },
+              "span": {
+                "start": 0,
+                "end": 24
+              }
+            }
+          ],
+          "plan": {
+            "_tag": "Switch",
+            "selector": "count",
+            "function": "integer",
+            "kind": "plural",
+            "at": "resource",
+            "cases": [
+              {
+                "key": "0",
+                "plan": {
+                  "_tag": "Leaf",
+                  "pattern": [
+                    "Keine Artikel"
+                  ]
+                }
+              },
+              {
+                "key": "one",
+                "plan": {
+                  "_tag": "Leaf",
+                  "pattern": [
+                    "Ein Artikel"
+                  ]
+                }
+              }
+            ],
+            "otherwise": {
+              "_tag": "Leaf",
+              "pattern": [
+                {
+                  "type": "expression",
+                  "arg": {
+                    "type": "variable",
+                    "name": "count",
+                    "span": {
+                      "start": 84,
+                      "end": 90
+                    }
+                  },
+                  "attributes": {},
+                  "span": {
+                    "start": 83,
+                    "end": 91
+                  }
+                },
+                " Artikel"
+              ]
+            }
+          },
+          "preformat": []
+        },
+        "ar": {
+          "locale": "ar",
+          "from": "en",
+          "declarations": [
+            {
+              "type": "input",
+              "name": "count",
+              "value": {
+                "type": "expression",
+                "arg": {
+                  "type": "variable",
+                  "name": "count",
+                  "span": {
+                    "start": 8,
+                    "end": 14
+                  }
+                },
+                "function": {
+                  "type": "function",
+                  "name": "integer",
+                  "options": {},
+                  "span": {
+                    "start": 15,
+                    "end": 23
+                  }
+                },
+                "attributes": {},
+                "span": {
+                  "start": 7,
+                  "end": 24
+                }
+              },
+              "span": {
+                "start": 0,
+                "end": 24
+              }
+            }
+          ],
+          "plan": {
+            "_tag": "Switch",
+            "selector": "count",
+            "function": "integer",
+            "kind": "plural",
+            "at": "resource",
+            "cases": [
+              {
+                "key": "0",
+                "plan": {
+                  "_tag": "Leaf",
+                  "pattern": [
+                    "No items"
+                  ]
+                }
+              },
+              {
+                "key": "one",
+                "plan": {
+                  "_tag": "Leaf",
+                  "pattern": [
+                    "One item"
+                  ]
+                }
+              }
+            ],
+            "otherwise": {
+              "_tag": "Leaf",
+              "pattern": [
+                {
+                  "type": "expression",
+                  "arg": {
+                    "type": "variable",
+                    "name": "count",
+                    "span": {
+                      "start": 76,
+                      "end": 82
+                    }
+                  },
+                  "attributes": {},
+                  "span": {
+                    "start": 75,
+                    "end": 83
+                  }
+                },
+                " items"
+              ]
+            }
+          },
+          "preformat": []
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Report > renders code frames, JSON and GitHub annotations > github 1`] = `
+"::error file=src/app.messages.ts,line=17,col=29,endLine=17,endColumn=29,title=syntax-error::Expected \`}\` to end the expression at 42 (broken)
+::warning title=missing-translation::No translation (invite, de)
+::warning title=missing-translation::No translation (greeting, fr)
+::warning title=missing-translation::No translation (items, fr)
+::warning title=missing-translation::No translation (invite, fr)
+"
+`;
+
+exports[`Report > renders code frames, JSON and GitHub annotations > json 1`] = `
+"[
+  {
+    "severity": "error",
+    "code": "syntax-error",
+    "message": "Expected \`}\` to end the expression at 42",
+    "file": "src/app.messages.ts",
+    "messageId": "broken",
+    "line": 17,
+    "column": 29,
+    "endLine": 17,
+    "endColumn": 29
+  },
+  {
+    "severity": "warning",
+    "code": "missing-translation",
+    "message": "No translation",
+    "messageId": "invite",
+    "locale": "de"
+  },
+  {
+    "severity": "warning",
+    "code": "missing-translation",
+    "message": "No translation",
+    "messageId": "greeting",
+    "locale": "fr"
+  },
+  {
+    "severity": "warning",
+    "code": "missing-translation",
+    "message": "No translation",
+    "messageId": "items",
+    "locale": "fr"
+  },
+  {
+    "severity": "warning",
+    "code": "missing-translation",
+    "message": "No translation",
+    "messageId": "invite",
+    "locale": "fr"
+  }
+]
+"
+`;
+
+exports[`Report > renders code frames, JSON and GitHub annotations > text 1`] = `
+"error[syntax-error]: Expected \`}\` to end the expression at 42 (broken)
+  --> src/app.messages.ts:17:29
+     |
+  17 |   {$name :string} and {$oops\`);
+     |                             ^
+
+warning[missing-translation]: No translation (invite, de)
+
+warning[missing-translation]: No translation (greeting, fr)
+
+warning[missing-translation]: No translation (items, fr)
+
+warning[missing-translation]: No translation (invite, fr)
+"
+`;

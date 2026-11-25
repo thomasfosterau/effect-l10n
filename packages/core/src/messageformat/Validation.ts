@@ -25,6 +25,7 @@ import {
   UnusedLocal,
   VariantKeyMismatch,
 } from "./MessageFormatError";
+import { functionOf } from "./internal/declarations";
 
 /**
  * One finding: an `error` makes the message invalid, a `warning` is lint.
@@ -113,25 +114,6 @@ const checkDeclarations = (message: DataModel.Message): Array<Diagnostic> =>
       };
     },
   ).diagnostics;
-
-/** The function a variable resolves to, following `.local $a = {$b}` chains. */
-const functionOf = (
-  message: DataModel.Message,
-  name: string,
-  visited: HashSet.HashSet<string> = HashSet.empty(),
-): Option.Option<DataModel.FunctionRef> =>
-  Option.flatMap(
-    Arr.findLast(message.declarations, (declaration) => declaration.name === name),
-    (declaration) => {
-      const value = declaration.value;
-      if (value.function !== undefined) return Option.some(value.function);
-      return value instanceof DataModel.VariableExpression &&
-        value.arg.name !== name &&
-        !HashSet.has(visited, value.arg.name)
-        ? functionOf(message, value.arg.name, HashSet.add(visited, name))
-        : Option.none();
-    },
-  );
 
 const keyId = (key: DataModel.Key): string =>
   key.type === "*" ? "*" : `=${key.value.normalize("NFC")}`;

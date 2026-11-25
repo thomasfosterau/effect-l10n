@@ -25,6 +25,7 @@ import {
 } from "./Diagnostic";
 import { Locale } from "./Locale";
 import * as DataModel from "./messageformat/DataModel";
+import { functionOf, selectionKind } from "./messageformat/internal/declarations";
 import { params } from "./messageformat/Params";
 
 /**
@@ -134,24 +135,6 @@ export interface Source {
 const variables = (message: DataModel.Message): ReadonlyArray<string> =>
   Arr.map(params(message), (param) => param.name);
 
-const functionOf = (
-  message: DataModel.Message,
-  name: string,
-  seen: ReadonlyArray<string> = [],
-): Option.Option<DataModel.FunctionRef> =>
-  Arr.findFirst(message.declarations, (d) => d.name === name).pipe(
-    Option.flatMap((declaration) =>
-      Option.orElse(Option.fromUndefinedOr(declaration.value.function), () =>
-        "arg" in declaration.value &&
-        declaration.value.arg.type === "variable" &&
-        declaration.value.arg.name !== name &&
-        !Arr.contains(seen, declaration.value.arg.name)
-          ? functionOf(message, declaration.value.arg.name, [...seen, name])
-          : Option.none(),
-      ),
-    ),
-  );
-
 const selectors = (
   message: DataModel.Message,
 ): ReadonlyArray<readonly [name: string, fn: Option.Option<DataModel.FunctionRef>]> =>
@@ -159,21 +142,14 @@ const selectors = (
     ? Arr.map(message.selectors, (selector) => [selector.name, functionOf(message, selector.name)])
     : [];
 
-const pluralFunctions: ReadonlyArray<string> = ["number", "integer", "offset"];
-
 /** The plural rule type a selector's function selects with, if any. */
 const pluralType = (fn: DataModel.FunctionRef): Option.Option<Intl.PluralRuleType> => {
-  if (!Arr.contains(pluralFunctions, fn.name)) return Option.none();
-  const select = R.get(fn.options, "select");
-  return Option.match(select, {
-    onNone: () => Option.some("cardinal"),
-    onSome: (operand) =>
-      operand.type === "literal" && operand.value === "ordinal"
-        ? Option.some("ordinal")
-        : operand.type === "literal" && operand.value === "exact"
-          ? Option.none()
-          : Option.some("cardinal"),
-  });
+  const kind = selectionKind(fn);
+  return kind === "plural"
+    ? Option.some("cardinal")
+    : kind === "ordinal"
+      ? Option.some("ordinal")
+      : Option.none();
 };
 
 const missingCategories = (

@@ -279,6 +279,31 @@ importers:
       '@effect/vitest':
         specifier: 'catalog:'
         version: 4.1.5(effect@4.1.5)(vitest@5.1.1)
+      '@thomasfosterau/effect-l10n-testing':
+        specifier: workspace:*
+        version: link:../testing
+      effect:
+        specifier: 4.1.5
+        version: 4.1.5
+      vite-plus:
+        specifier: 'catalog:'
+        version: 1.7.0(@arethetypeswrong/core@0.18.5)(@types/node@26.6.6)(@typescript/typescript6@6.0.2)(@vitest/coverage-istanbul@5.1.1)(publint@0.3.25)(yaml@2.9.1)
+
+  packages/node:
+    dependencies:
+      '@effect/platform-node-shared':
+        specifier: 'catalog:'
+        version: 4.1.5(effect@4.1.5)
+      '@thomasfosterau/effect-l10n':
+        specifier: workspace:*
+        version: link:../core
+    devDependencies:
+      '@effect/language-service':
+        specifier: 'catalog:'
+        version: 0.87.5
+      '@effect/vitest':
+        specifier: 'catalog:'
+        version: 4.1.5(effect@4.1.5)(vitest@5.1.1)
       effect:
         specifier: 4.1.5
         version: 4.1.5
