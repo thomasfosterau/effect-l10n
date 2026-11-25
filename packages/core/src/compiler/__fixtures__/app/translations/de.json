@@ -1,0 +1,7 @@
+{
+  "locale": "de",
+  "messages": {
+    "greeting": "Hallo, {$name}!",
+    "items": ".input {$count :integer} .match $count 0 {{Keine Artikel}} one {{Ein Artikel}} * {{{$count} Artikel}}"
+  }
+}

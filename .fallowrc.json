@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/fallow-rs/fallow/main/schema.json",
   "entry": [
     "packages/*/src/**/*.test.ts",
-    "packages/*/src/__fixtures__/**/*.ts",
+    "packages/*/src/**/__fixtures__/**/*.ts",
     "vite.config.ts",
     "vite.package.ts",
     "packages/*/vite.config.ts"
@@ -44,6 +44,10 @@
       {
         "name": "testing",
         "patterns": ["packages/testing/**"]
+      },
+      {
+        "name": "node",
+        "patterns": ["packages/node/**"]
       }
     ],
     "rules": [
@@ -62,6 +66,10 @@
       {
         "from": "compiler",
         "allow": ["messageformat", "core", "testing"]
+      },
+      {
+        "from": "node",
+        "allow": ["messageformat", "core", "compiler", "testing"]
       }
     ],
     "coverage": {

@@ -1,0 +1,61 @@
+{
+  "name": "@thomasfosterau/effect-l10n-node",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Run the effect-l10n compiler on Node: its layers and a Promise API",
+  "keywords": [
+    "compiler",
+    "effect",
+    "i18n",
+    "l10n",
+    "messageformat",
+    "node"
+  ],
+  "homepage": "https://github.com/thomasfosterau/effect-l10n/tree/trunk/packages/node#readme",
+  "bugs": {
+    "url": "https://github.com/thomasfosterau/effect-l10n/issues"
+  },
+  "license": "MIT",
+  "author": "Thomas Foster <me@thomasfoster.au>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomasfosterau/effect-l10n.git",
+    "directory": "packages/node"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./NodeCompiler": {
+      "types": "./dist/NodeCompiler.d.ts",
+      "default": "./dist/NodeCompiler.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@effect/platform-node-shared": "catalog:",
+    "@thomasfosterau/effect-l10n": "workspace:*"
+  },
+  "devDependencies": {
+    "@effect/language-service": "catalog:",
+    "@effect/vitest": "catalog:",
+    "effect": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "peerDependencies": {
+    "effect": "catalog:platform-node-peers"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

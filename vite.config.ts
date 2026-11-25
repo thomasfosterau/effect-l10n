@@ -24,6 +24,7 @@ export default defineConfig({
         dependsOn: [
           "@thomasfosterau/effect-l10n#check",
           "@thomasfosterau/effect-l10n-testing#check",
+          "@thomasfosterau/effect-l10n-node#check",
         ],
         cache: { input: cacheInputs, output: [] },
       },

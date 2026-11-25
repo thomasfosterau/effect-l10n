@@ -9,6 +9,7 @@ export default packageConfig({
   Message: "src/Message.ts",
   ModuleLoader: "src/ModuleLoader.ts",
   Project: "src/Project.ts",
+  Report: "src/Report.ts",
   Translation: "src/Translation.ts",
   "messageformat/index": "src/messageformat/index.ts",
   "messageformat/DataModel": "src/messageformat/DataModel.ts",
@@ -22,4 +23,10 @@ export default packageConfig({
   "messageformat/Serializer": "src/messageformat/Serializer.ts",
   "messageformat/Validation": "src/messageformat/Validation.ts",
   "compiler/index": "src/compiler/index.ts",
+  "compiler/Compiler": "src/compiler/Compiler.ts",
+  "compiler/Debug": "src/compiler/Debug.ts",
+  "compiler/Ir": "src/compiler/Ir.ts",
+  "compiler/Lowering": "src/compiler/Lowering.ts",
+  "compiler/Plan": "src/compiler/Plan.ts",
+  "compiler/Target": "src/compiler/Target.ts",
 });

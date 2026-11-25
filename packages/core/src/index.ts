@@ -44,4 +44,9 @@ export * as Project from "./Project";
 /**
  * @since 0.1.0
  */
+export * as Report from "./Report";
+
+/**
+ * @since 0.1.0
+ */
 export * as Translation from "./Translation";
