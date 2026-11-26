@@ -36,8 +36,8 @@ catalog:
   "@typescript/native": "npm:typescript@7.0.2"
   # `vite` and `vitest` must equal what this vite-plus pins; `vp migrate`
   # re-pins them.
-  vite-plus: 1.7.0
-  vite: npm:@voidzero-dev/vite-plus-core@8.3.8000
+  vite-plus: 1.8.0
+  vite: npm:@voidzero-dev/vite-plus-core@8.3.8001
   vitest: 5.1.1
 
 # Peer ranges published packages declare. Raising a floor is a breaking change;
@@ -72,11 +72,9 @@ permissions:
 skills:
   dirs: [.claude/skills]
 
-peerDependencyRules:
-  allowAny:
-    - vitest
-  allowedVersions:
-    vitest: "*"
-
 # Hold new releases for 24 hours; Dependabot's cooldown matches it.
 minimumReleaseAge: 1440
+# Vite+ selects Node.js (.node-version) and pnpm (packageManager); pnpm
+# must not download or switch to its own.
+runtimeOnFail: ignore
+pmOnFail: ignore
