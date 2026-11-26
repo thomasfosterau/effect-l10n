@@ -15,14 +15,18 @@ updates:
       default-days: 1
       exclude:
         - "@thomasfosterau/*"
+    # vite-plus pins these exactly; they move only with it, by hand (see
+    # docs/CONTRIBUTING.md).
+    ignore:
+      - dependency-name: "vite"
+      - dependency-name: "@voidzero-dev/*"
+      - dependency-name: "vitest"
+      - dependency-name: "@vitest/*"
     groups:
       toolchain:
         applies-to: version-updates
         patterns:
           - "vite-plus"
-          - "@voidzero-dev/*"
-          - "vitest"
-          - "@vitest/*"
           - "@effect/tsgo"
       effect:
         applies-to: version-updates
