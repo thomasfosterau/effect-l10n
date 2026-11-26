@@ -75,4 +75,4 @@ export const strings = Target.make({
 
 In the lowered project, each locale's message has a `plan` whose `Switch`es are each `at` the `resource` or the `accessor`, its `declarations`, and `preformat`: expressions the accessor formats ahead into fresh string parameters (`_0`, `_1`, …) that the patterns read in their place. `Plan.evaluate` is the reference semantics the emitted resources and accessors must agree with.
 
-The `debug` target (`compiler/Debug`) writes the lowered project as JSON (`ir.json`), which shows exactly what `emit` receives.
+Targets ship as their own packages, starting with [the web target](web.md). The `debug` target (`compiler/Debug`) writes the lowered project as JSON (`ir.json`), which shows exactly what `emit` receives.

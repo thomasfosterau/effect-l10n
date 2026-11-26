@@ -1,0 +1,8 @@
+{
+  "locale": "de",
+  "messages": {
+    "title": "Willkommen, {$name}",
+    "visits": ".input {$count :integer} .match $count 0 {{Noch keine Besuche}} one {{{#b}Ein{/b} Besuch}} * {{{#b}{$count}{/b} Besuche}}",
+    "about": "Über uns"
+  }
+}

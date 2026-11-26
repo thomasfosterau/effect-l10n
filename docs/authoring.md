@@ -16,6 +16,7 @@ An ID is dot-separated identifiers, each matching `[A-Za-z][A-Za-z0-9_]*`. Targe
 | ------------- | ------------------------------------------------- | ---------------------- |
 | Android       | each segment in `snake_case`, joined by `_`       | `checkout_total_price` |
 | Swift, Kotlin | each segment in `camelCase`, as nested namespaces | `checkout.totalPrice`  |
+| Web           | each segment in `camelCase`, joined by `_`        | `checkout_totalPrice`  |
 
 Two IDs that mangle to the same identifier, such as `fooBar` and `foo_bar`, are a `message-id-collision` error.
 

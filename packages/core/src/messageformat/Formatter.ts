@@ -176,6 +176,24 @@ export class Formatter extends Context.Service<
   );
 }
 
+/**
+ * A locale's direction, from its likely script: `rtl` for scripts such as
+ * Arabic and Hebrew, `auto` if the locale doesn't parse.
+ *
+ * @category bidi
+ * @since 0.1.0
+ */
+export const directionOf: (locale: string) => Direction = localeDirection;
+
+/**
+ * What an expression formats as when it fails, without the braces: its
+ * literal as `|…|`, its variable as `$name`, or its function as `:name`.
+ *
+ * @category formatting
+ * @since 0.1.0
+ */
+export const fallbackOf: (expression: DataModel.Expression) => string = fallbackSource;
+
 const isolates = { ltr: "⁦", rtl: "⁧", auto: "⁨" } as const;
 const pop: BidiIsolationPart = { type: "bidiIsolation", value: "⁩" };
 

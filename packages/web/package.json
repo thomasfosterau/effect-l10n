@@ -1,0 +1,64 @@
+{
+  "name": "@thomasfosterau/effect-l10n-web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The effect-l10n web target: tree-shakeable ES modules per message, a locale runtime, URL helpers and SSR middleware",
+  "keywords": [
+    "compiler",
+    "effect",
+    "i18n",
+    "l10n",
+    "messageformat",
+    "ssr",
+    "web"
+  ],
+  "homepage": "https://github.com/thomasfosterau/effect-l10n/tree/trunk/packages/web#readme",
+  "bugs": {
+    "url": "https://github.com/thomasfosterau/effect-l10n/issues"
+  },
+  "license": "MIT",
+  "author": "Thomas Foster <me@thomasfoster.au>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thomasfosterau/effect-l10n.git",
+    "directory": "packages/web"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./WebTarget": {
+      "types": "./dist/WebTarget.d.ts",
+      "default": "./dist/WebTarget.js"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@thomasfosterau/effect-l10n": "workspace:*"
+  },
+  "devDependencies": {
+    "@effect/language-service": "catalog:",
+    "@effect/platform-node-shared": "catalog:",
+    "@effect/vitest": "catalog:",
+    "@thomasfosterau/effect-l10n-testing": "workspace:*",
+    "effect": "catalog:",
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "peerDependencies": {
+    "effect": "catalog:peers"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

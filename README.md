@@ -11,6 +11,7 @@ An [Effect](https://effect.website) library and CLI for internationalisation and
 | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | [`@thomasfosterau/effect-l10n`](packages/core)      | The core: the MessageFormat 2 engine (`/messageformat`), the authoring API (root) and the compiler (`/compiler`) |
 | [`@thomasfosterau/effect-l10n-node`](packages/node) | The compiler on Node: its layers and a Promise `compile({ cwd })` for build scripts                              |
+| [`@thomasfosterau/effect-l10n-web`](packages/web)   | The web target: an ES module per message, a locale runtime with strategies, URL helpers and SSR middleware       |
 | `@thomasfosterau/effect-l10n-<name>`                | Platform targets, the CLI and bundler plugins, each its own package as its milestone starts                      |
 
 Once released: `vp add @thomasfosterau/effect-l10n effect` (`effect` is a peer).
@@ -19,6 +20,7 @@ Once released: `vp add @thomasfosterau/effect-l10n effect` (`effect` is a peer).
 
 - [Authoring messages, catalogs and translations](docs/authoring.md)
 - [The compiler](docs/compiler.md) and [diagnostics](docs/diagnostics.md)
+- [The web target](docs/web.md)
 - [Design decisions (ADRs)](docs/adr/README.md)
 - [Contributing](docs/CONTRIBUTING.md) and [publishing](docs/PUBLISHING.md)
 - License: [MIT](LICENSE.md)
