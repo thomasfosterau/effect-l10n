@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Tests build `Request`s for the emitted SSR middleware.
+    "lib": ["ES2022", "ES2023.Intl", "DOM"],
+    // The fixture's catalogs infer types from core's bundled declarations,
+    // which name chunk files no export reaches; nothing here emits them.
+    "declaration": false
+  },
+  "include": ["src", "vite.config.ts"]
+}

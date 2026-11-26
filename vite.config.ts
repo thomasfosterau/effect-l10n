@@ -25,6 +25,7 @@ export default defineConfig({
           "@thomasfosterau/effect-l10n#check",
           "@thomasfosterau/effect-l10n-testing#check",
           "@thomasfosterau/effect-l10n-node#check",
+          "@thomasfosterau/effect-l10n-web#check",
         ],
         cache: { input: cacheInputs, output: [] },
       },
@@ -133,13 +134,24 @@ export default defineConfig({
           "effect/no-known-value-widening": "off",
         },
       },
+      // The web target's tests drive the plain-JavaScript runtime it emits,
+      // whose API returns `undefined` for "none", with native-`Map` browser fakes.
+      {
+        files: ["packages/web/src/**/*.test.ts"],
+        rules: {
+          "effect/prefer-option-over-null": "off",
+          "effect/avoid-native-object-helpers": "off",
+        },
+      },
       // Assertion helpers wrap `expect` and are called from inside test blocks.
       {
         files: ["packages/testing/src/**/*.ts"],
         rules: { "vitest/no-standalone-expect": "off" },
       },
     ],
-    ignorePatterns: ["**/dist/**", "coverage/**"],
+    // `__golden__/` holds generated target output, checked by its own tests;
+    // `examples/` import output a build generates, which isn't committed.
+    ignorePatterns: ["**/dist/**", "coverage/**", "**/__golden__/**", "examples/**"],
     options: {
       typeAware: true,
       typeCheck: true,

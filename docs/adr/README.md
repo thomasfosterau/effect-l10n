@@ -12,6 +12,7 @@ Each record states one decision: the context that forced it, the decision, and i
 | [0006](0006-package-layout.md)            | The package layout                                              | Superseded in part by [0007](0007-single-core-package.md) |
 | [0007](0007-single-core-package.md)       | One core package under the owner's scope                        | Accepted                                                  |
 | [0008](0008-selection-plans.md)           | Lower selection through plans, not variant flattening           | Accepted                                                  |
+| [0009](0009-web-output.md)                | Web output: a module per message over generated helpers         | Accepted                                                  |
 
 ## Writing a new one
 
